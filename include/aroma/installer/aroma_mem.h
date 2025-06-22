@@ -25,7 +25,7 @@
 
 void * aroma_malloc(size_t size
 #ifndef _AROMA_NODEBUG
-                    , long line, char * filename
+                    , long line, const char * filename
 #endif
                    );
 

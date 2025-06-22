@@ -51,12 +51,6 @@ SOURCES := \
 \
 	libs/minutf8/minutf8.c \
 \
-	libs/minzip/DirUtil.c \
-	libs/minzip/Hash.c \
-	libs/minzip/Inlines.c \
-	libs/minzip/SysUtil.c \
-	libs/minzip/Zip.c \
-\
 	libs/freetype/src/autofit/autofit.c \
 	libs/freetype/src/base/ftinit.c \
 	libs/freetype/src/base/ftbase.c \
@@ -78,8 +72,44 @@ SOURCES := \
 	libs/freetype/src/smooth/ftsmooth.c \
 	libs/freetype/src/truetype/truetype.c \
 \
+	vendor/logging/liblog/log_event_list.cpp \
+	vendor/logging/liblog/log_event_write.cpp \
+	vendor/logging/liblog/logd_writer.cpp \
+	vendor/logging/liblog/logger_name.cpp \
+	vendor/logging/liblog/logger_read.cpp \
+	vendor/logging/liblog/logger_write.cpp \
+	vendor/logging/liblog/logprint.cpp \
+	vendor/logging/liblog/pmsg_writer.cpp \
+	vendor/logging/liblog/properties.cpp \
+\
+	vendor/libbase/abi_compatibility.cpp \
+	vendor/libbase/chrono_utils.cpp \
+	vendor/libbase/file.cpp \
+	vendor/libbase/hex.cpp \
+	vendor/libbase/logging.cpp \
+	vendor/libbase/mapped_file.cpp \
+	vendor/libbase/parsebool.cpp \
+	vendor/libbase/parsenetaddress.cpp \
+	vendor/libbase/posix_strerror_r.cpp \
+	vendor/libbase/process.cpp \
+	vendor/libbase/properties.cpp \
+	vendor/libbase/stringprintf.cpp \
+	vendor/libbase/strings.cpp \
+	vendor/libbase/threads.cpp \
+	vendor/libbase/test_utils.cpp \
+\
+	vendor/googletest/googletest/src/gtest-all.cc \
+\
+	libs/ziparchive/zip_archive.cc \
+	libs/ziparchive/zip_archive_stream_entry.cc \
+	libs/ziparchive/zip_cd_entry_map.cc \
+	libs/ziparchive/zip_error.cpp \
+	libs/ziparchive/zip_writer.cc \
+	libs/ziparchive/incfs_support/signal_handling.cpp \
+\
 	$(wildcard src/edify/*.c) \
 	$(wildcard src/libs/*.c) \
+	$(wildcard src/libs/*.cpp) \
 	$(wildcard src/controls/*.c) \
 	$(wildcard src/main/*.c)
 
@@ -98,6 +128,14 @@ INCLUDES := \
 	-Ilibs/minutf8/include \
 	-Ilibs/freetype/include \
 	-Iinclude/freetype \
+	-Ivendor/core/libcutils/include \
+	-Ivendor/logging/liblog/include \
+	-Ivendor/libbase/include \
+	-Ivendor/logging/liblog/include \
+	-Ivendor/googletest/googletest \
+	-Ivendor/googletest/googletest/include \
+	-Ilibs/ziparchive/incfs_support/include \
+	-Ilibs/ziparchive/include \
 	-Iinclude/aroma \
 	-Isrc/edify
 
@@ -136,6 +174,15 @@ CXXFLAGS := \
 	-flto \
 	-fPIC -DPIC \
 	-D_FILE_OFFSET_BITS=64 \
+	-DANDROID_DEBUGGABLE=0 \
+	-DSNET_EVENT_LOG_TAG=1397638484 \
+	-DLIBLOG_LOG_TAG=1006 \
+	-Wno-c99-designator \
+	-Wno-unused-value \
+	-Wno-c++11-narrowing \
+	-Wno-reorder-init-list \
+	-Wno-vla-cxx-extension \
+	-std=c++20 \
 	$(INCLUDES)
 
 ASFLAGS := $(CFLAGS)

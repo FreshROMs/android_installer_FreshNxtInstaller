@@ -1,3 +1,4 @@
+# External libraries
 [submodule "libs/png"]
 	path = libs/png
 	url = https://github.com/pnggroup/libpng.git
@@ -6,5 +7,37 @@
 [submodule "libs/freetype"]
 	path = libs/freetype
 	url = https://github.com/freetype/freetype.git
+	shallow = true
+	ignore = dirty
+[submodule "libs/ziparchive"]
+	path = libs/ziparchive
+	url = https://android.googlesource.com/platform/system/libziparchive
+	branch = android14-release
+	shallow = true
+	ignore = dirty
+
+# AOSP dependencies
+[submodule "vendor/core"]
+	path = vendor/core
+	url = https://android.googlesource.com/platform/system/core
+	branch = android14-release
+	shallow = true
+	ignore = dirty
+[submodule "vendor/logging"]
+	path = vendor/logging
+	url = https://android.googlesource.com/platform/system/logging
+	branch = android14-release
+	shallow = true
+	ignore = dirty
+[submodule "vendor/libbase"]
+	path = vendor/libbase
+	url = https://android.googlesource.com/platform/system/libbase
+	branch = android14-release
+	shallow = true
+	ignore = dirty
+[submodule "vendor/googletest"]
+	path = vendor/googletest
+	url = https://android.googlesource.com/platform/external/googletest
+	branch = android14-release
 	shallow = true
 	ignore = dirty

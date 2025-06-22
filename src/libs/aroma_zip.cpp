@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2011 Ahmad Amarullah ( http://amarullz.com/ )
+ *               2025 The Fresh Project ( https://github.com/FreshROMs )
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,77 +18,82 @@
 /*
  * Descriptions:
  * -------------
- * minzip wrapper for AROMA Installer
+ * libziparchive wrapper for AROMA Installer
  *
  */
 
 #include <fcntl.h>
 #include <sys/stat.h>
+#include <ziparchive/zip_archive.h>
 
-#include "../../libs/minzip/Zip.h"
 #include <installer/aroma.h>
 
+extern "C" {
+
 /*****************************[ GLOBAL VARIABLES ]*****************************/
-static ZipArchive zip;
+static ZipArchiveHandle zip = nullptr;
 
 /*********************************[ FUNCTIONS ]********************************/
+
 //-- AROMA ZIP Init
-byte az_init(const char * filename) {
-  if (mzOpenZipArchive(filename, &zip) != 0) {
+byte az_init(const char *filename) {
+  if (OpenArchive(filename, &zip) != 0) {
     return 0;
   }
-  
   mkdir(AROMA_TMP, 0755);
   return 1;
 }
 
 //-- AROMA ZIP Close
 void az_close() {
-  mzCloseZipArchive(&zip);
+  if (zip != nullptr) {
+    CloseArchive(zip);
+    zip = nullptr;
+  }
 }
 
 //-- Extract To Memory
-byte az_readmem(AZMEM * out, const char * zpath, byte bytesafe) {
-  char z_path[256];
-  snprintf(z_path, sizeof(z_path) - 1, "%s", zpath);
-  const ZipEntry * se = mzFindZipEntry(&zip, z_path);
-  
-  if (se == NULL) {
+byte az_readmem(AZMEM *out, const char *zpath, byte bytesafe) {
+  ZipEntry64 entry;
+  if (FindEntry(zip, std::string_view(zpath), &entry) != 0) {
     return 0;
   }
-  
-  out->sz   = se->uncompLen + (bytesafe ? 0 : 1);
-  out->data = malloc(out->sz);
-  
-  //memset(out->data,0,out->sz);
-  if (!mzReadZipEntry(&zip, se, (char *) out->data, se->uncompLen)) {
+
+  out->sz = entry.uncompressed_length + (bytesafe ? 0 : 1);
+  out->data = (byte*)malloc(out->sz);
+  if (!out->data) {
+    return 0;
+  }
+
+  int result = ExtractToMemory(zip, &entry, out->data, entry.uncompressed_length);
+  if (result != 0) {
     free(out->data);
     return 0;
   }
-  
+
   if (!bytesafe) {
-    out->data[se->uncompLen] = '\0';
+    ((char *)out->data)[entry.uncompressed_length] = '\0';
   }
-  
+
   return 1;
 }
 
 //-- Extract To File
-byte az_extract(const char * zpath, const char * dest) {
-  const ZipEntry * zdata = mzFindZipEntry(&zip, zpath);
-  
-  if (zdata == NULL) {
+byte az_extract(const char *zpath, const char *dest) {
+  ZipEntry64 entry;
+  if (FindEntry(zip, std::string_view(zpath), &entry) != 0) {
     return 0;
   }
-  
+
   unlink(dest);
   int fd = creat(dest, 0755);
-  
   if (fd < 0) {
     return 0;
   }
-  
-  byte ok = mzExtractZipEntryToFile(&zip, zdata, fd);
+
+  int result = ExtractEntryToFile(zip, &entry, fd);
   close(fd);
-  return ok;
+  return (result == 0) ? 1 : 0;
+}
+
 }

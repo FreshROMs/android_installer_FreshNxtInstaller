@@ -24,6 +24,11 @@
 #ifndef __AROMA_H__
 #define __AROMA_H__
 
+/* extern for cpp */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 //
 // Common Headers, Always Used
 //
@@ -966,5 +971,9 @@ byte acchkopt_itemtype(ACONTROLP ctl, int index);
 #define STRINGIFY(x) #x
 #define EXPAND(x) STRINGIFY(x)
 
+/* end of extern for cpp */
+#ifdef __cplusplus
+}
+#endif 
 
 #endif // __AROMA_H__
