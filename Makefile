@@ -1,30 +1,42 @@
-#!/usr/bin/make -f
-ARCH := arm64
-ARCH_ASFLAGS :=
-ARCH_CFLAGS := -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -s -Os -s -Wl,--allow-multiple-definition -save-temps -Os -static -fdata-sections -ffunction-sections -Wl,--gc-sections -fPIC -DPIC -Wl,-s -D_AROMA_NODEBUG -ffast-math -fomit-frame-pointer
-
-
-# Version info
+##
+## Version info
+##
 AROMA_NAME    := Fresh Install Wizard
 AROMA_VERSION := 13.2.1.1
 AROMA_BUILD   := $(shell date +%s)
 AROMA_CN      := Red-Eyes Black Dragon
+
+##
+## Compiler options
+##
+ARCH := aarch64
+CROSS_COMPILE := aarch64-linux-gnu-
 
 CC := $(CROSS_COMPILE)gcc
 CXX := $(CROSS_COMPILE)g++
 AS := $(CROSS_COMPILE)as
 AR := $(CROSS_COMPILE)ar
 
-SOURCES_zlib := \
+##
+## Directories
+##
+TOP := $(PWD)
+OUT_DIR := $(TOP)/out
+BUILD_DIR := $(OUT_DIR)/build
+TMP_DIR := $(OUT_DIR)/tmp
+
+##
+## Input
+##
+SOURCES := \
 	libs/zlib/adler32.c \
 	libs/zlib/crc32.c \
 	libs/zlib/infback.c \
 	libs/zlib/inffast.c \
 	libs/zlib/inflate.c \
 	libs/zlib/inftrees.c \
-	libs/zlib/zutil.c
-
-SOURCES_libpng := \
+	libs/zlib/zutil.c \
+\
 	libs/png/png.c \
 	libs/png/pngerror.c \
 	libs/png/pnggccrd.c \
@@ -37,18 +49,16 @@ SOURCES_libpng := \
 	libs/png/pngrutil.c \
 	libs/png/pngset.c \
 	libs/png/pngtrans.c \
-	libs/png/pngvcrd.c
-
-SOURCES_minutf8 := libs/minutf8/minutf8.c
-
-SOURCES_minzip := \
+	libs/png/pngvcrd.c \
+\
+	libs/minutf8/minutf8.c \
+\
 	libs/minzip/DirUtil.c \
 	libs/minzip/Hash.c \
 	libs/minzip/Inlines.c \
 	libs/minzip/SysUtil.c \
-	libs/minzip/Zip.c
-
-SOURCES_freetype := \
+	libs/minzip/Zip.c \
+\
 	libs/freetype/autofit/autofit.c \
 	libs/freetype/base/basepic.c \
 	libs/freetype/base/ftapi.c \
@@ -68,43 +78,112 @@ SOURCES_freetype := \
 	libs/freetype/sfnt/sfnt.c \
 	libs/freetype/smooth/smooth.c \
 	libs/freetype/truetype/truetype.c \
-	libs/freetype/base/ftlcdfil.c
-
-SOURCES_aroma := \
+	libs/freetype/base/ftlcdfil.c \
+\
 	$(wildcard src/edify/*.c) \
 	$(wildcard src/libs/*.c) \
 	$(wildcard src/controls/*.c) \
 	$(wildcard src/main/*.c)
 
+OBJS := \
+	$(patsubst %.s,$(BUILD_DIR)/%.o,$(filter %.s,$(SOURCES))) \
+	$(patsubst %.c,$(BUILD_DIR)/%.o,$(filter %.c,$(SOURCES))) \
+	$(patsubst %.cc,$(BUILD_DIR)/%.o,$(filter %.cc,$(SOURCES))) \
+	$(patsubst %.cpp,$(BUILD_DIR)/%.o,$(filter %.cpp,$(SOURCES)))
 
-SOURCES := $(SOURCES_zlib) $(SOURCES_libpng) $(SOURCES_minutf8) $(SOURCES_minzip) $(SOURCES_freetype) $(SOURCES_aroma)
+##
+## Compiler flags
+##
+INCLUDES := \
+	-Iinclude \
+	-Isrc
 
-OBJS := $(SOURCES:.c=.o)
-OBJS := $(OBJS:.s=.o)
+AROMA_VERSION_FLAGS := \
+	-DAROMA_NAME="\"$(AROMA_NAME)\"" \
+	-DAROMA_VERSION="\"$(AROMA_VERSION)\"" \
+	-DAROMA_BUILD="\"$(AROMA_BUILD)\"" \
+	-DAROMA_BUILD_CN="\"$(AROMA_CN)\""
 
-INCLUDES := -Iinclude -Isrc
+CFLAGS := \
+	-O2 \
+	-save-temps=obj \
+	-fdata-sections \
+	-ffunction-sections \
+	-ftree-vectorize \
+	-funsafe-math-optimizations \
+	-fomit-frame-pointer \
+	-fPIC -DPIC \
+	-D_FILE_OFFSET_BITS=64 \
+	-DFT2_BUILD_LIBRARY=1 \
+	-D_AROMA_NODEBUG \
+	$(INCLUDES) \
+	$(AROMA_VERSION_FLAGS)
 
-AROMA_VERSION_CFLAGS := -DAROMA_NAME="\"$(AROMA_NAME)\"" -DAROMA_VERSION="\"$(AROMA_VERSION)\"" -DAROMA_BUILD="\"$(AROMA_BUILD)\"" -DAROMA_BUILD_CN="\"$(AROMA_CN)\"" $(INCLUDES)
-CFLAGS := $(ARCH_CFLAGS) -O2 -static -DFT2_BUILD_LIBRARY=1 -fPIC -DPIC -fdata-sections -ffunction-sections -D_AROMA_NODEBUG $(AROMA_VERSION_CFLAGS)
-ASFLAGS := $(ARCH_ASFLAGS)
-LDLIBS := -lm -lpthread
-LDFLAGS := --gc-sections --strip-all
+CXXFLAGS := \
+	-O2 \
+	-save-temps=obj \
+	-fdata-sections \
+	-ffunction-sections \
+	-ftree-vectorize \
+	-funsafe-math-optimizations \
+	-fomit-frame-pointer \
+	-fPIC -DPIC \
+	-D_FILE_OFFSET_BITS=64 \
+	$(INCLUDES)
 
-all: bin/aroma_installer-$(ARCH).zip
+ASFLAGS :=
 
-bin/aroma_installer-$(ARCH).zip: bin/aroma_installer-$(ARCH)
-	cp -RT assets tmp-zip
-	cp $(@:.zip=) tmp-zip/META-INF/com/google/android/update-binary
-	cp assets/META-INF/com/google/android/install-wizard-binary tmp-zip/META-INF/com/google/android/install-wizard-binary
-	7z a $@ ./tmp-zip/*
+##
+## Linker flags
+##
+LDLIBS := \
+	-lm \
+	-lpthread
 
-bin/aroma_installer-$(ARCH): $(OBJS)
-	mkdir -p bin
-	$(CC) $(CFLAGS) -o $@ $(OBJS) $(LDLIBS)
+LDFLAGS := \
+	-Wl,--gc-sections \
+	-Wl,--strip-all \
+	-static
+
+##
+## Targets
+##
+$(BUILD_DIR)/%.o: %.s   #-- Build rule for Assembly '.s' files
+	@mkdir -p $(dir $@)
+	$(AS) $(ASFLAGS) -c $< -o $@
+
+$(BUILD_DIR)/%.o: %.c   #-- Build rule for C '.c' files
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(BUILD_DIR)/%.o: %.cc  #-- Build rule for C++ '.cc' files
+	@mkdir -p $(dir $@)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+$(BUILD_DIR)/%.o: %.cpp #-- Build rule for C++ '.cpp' files
+	@mkdir -p $(dir $@)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+all: zip
+	@echo "  I: Build complete."
+	@echo "     Output files have been written to: $(OUT_DIR)"
+	@echo " "
+
+zip: bin
+	@echo "  I: Building zip file..."
+	@mkdir -p "$(TMP_DIR)"
+	@cp -a "$(TOP)/assets/META-INF" "$(TMP_DIR)"
+	@cp -a "$(OUT_DIR)/install_wizard-$(ARCH)"  "$(TMP_DIR)/META-INF/com/google/android/update-binary"
+
+	@7z a "$(OUT_DIR)/install_wizard-$(ARCH).zip" "$(TMP_DIR)/"* 2>&1 | sed 's/^/    /'
+	@echo " "
+
+bin: $(OBJS)
+	@mkdir -p "$(OUT_DIR)"
+	@$(CXX) $(LDFLAGS) $(OBJS) $(LDLIBS) -o "$(OUT_DIR)/install_wizard-$(ARCH)"
+	@echo " "
 
 clean:
-	$(RM) $(OBJS)
-	$(RM) bin/aroma_installer-$(ARCH) bin/aroma_installer-$(ARCH).zip
-	$(RM) -r tmp-zip *.i *.s *.bc
+	@rm -rf "$(OUT_DIR)"
 
 .PHONY: clean
