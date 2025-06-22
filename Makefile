@@ -30,14 +30,6 @@ TMP_DIR := $(OUT_DIR)/tmp
 ## Input
 ##
 SOURCES := \
-	libs/zlib/adler32.c \
-	libs/zlib/crc32.c \
-	libs/zlib/infback.c \
-	libs/zlib/inffast.c \
-	libs/zlib/inflate.c \
-	libs/zlib/inftrees.c \
-	libs/zlib/zutil.c \
-\
 	libs/png/png.c \
 	libs/png/pngerror.c \
 	libs/png/pngget.c \
@@ -107,7 +99,6 @@ INCLUDES := \
 	-Ilibs/freetype/include \
 	-Iinclude/freetype \
 	-Iinclude/aroma \
-	-Iinclude \
 	-Isrc/edify
 
 AROMA_VERSION_FLAGS := \
@@ -153,7 +144,8 @@ ASFLAGS := $(CFLAGS)
 ## Linker flags
 ##
 LDLIBS := \
-	-lm
+	-lm \
+	-lz
 
 LDFLAGS := \
 	-Wl,--gc-sections \
