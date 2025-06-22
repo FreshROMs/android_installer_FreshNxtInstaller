@@ -21,6 +21,8 @@
  *
  */
 
+#include <ctype.h>
+
 #include <installer/aroma.h>
 
 AARRAYP alang = NULL;

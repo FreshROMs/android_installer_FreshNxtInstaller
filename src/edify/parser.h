@@ -94,3 +94,4 @@ typedef struct YYLTYPE {
 
 extern YYLTYPE yylloc;
 
+int yyparse(Expr ** root, int * error_count);

@@ -23,9 +23,11 @@
 
 #include <sys/times.h>
 #include <sys/vfs.h>
+#include <ctype.h>
 #include <dirent.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+
 #include <installer/aroma.h>
 
 /* Micro Sleep */
@@ -48,50 +50,35 @@ byte file_exists(const char * file) {
 }
 
 //-- COPY FILE
-byte alib_copy(char * src, char * dst) {
-  int      iFd, oFd, oFlags;
-  mode_t   fPerm;
-  ssize_t  numRead;
-  char     buf[1024];
-  byte     ret = 2;
+byte alib_copy(const char *src, const char *dst) {
+  int iFd = -1, oFd = -1;
+  char buf[1024];
+  ssize_t numRead;
+  byte ret = 2;
+
   iFd = open(src, O_RDONLY);
-  
-  if (iFd == -1) {
-    goto done;
-  }
-  
-  oFlags = O_CREAT | O_WRONLY | O_TRUNC;
-  fPerm  = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH;
-  oFd    = open(dst, oFlags, fPerm);
-  
+  if (iFd == -1) goto done;
+
+  oFd = open(dst, O_CREAT | O_WRONLY | O_TRUNC,
+             S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
   if (oFd == -1) {
     ret = 3;
     goto done;
   }
-  
-  while ((numRead = read(iFd, buf, 1024)) > 0) {
+
+  while ((numRead = read(iFd, buf, sizeof(buf))) > 0) {
     if (write(oFd, buf, numRead) != numRead) {
       ret = 4;
       goto done;
     }
   }
-  
-  if (numRead == -1) {
-    ret = 4;
-    goto done;
-  }
-  
-  ret = 1;
-done:
 
-  if (iFd != -1) {
-    close(iFd);
-  }
-  
-  if (oFd != -1) {
-    close(oFd);
-  }
-  
+  if (numRead == -1) ret = 5;
+  else ret = 1;
+
+done:
+  if (iFd != -1) close(iFd);
+  if (oFd != -1) close(oFd);
   return ret;
 }
 
@@ -428,7 +415,7 @@ byte akinetic_uphandler(AKINETIC * p, int mouseY) {
 int akinetic_fling(AKINETIC * p) {
   p->velocity = p->velocity * AKINETIC_DAMPERING;
   
-  if (abs(p->velocity) < 0.1) {
+  if (fabs(p->velocity) < 0.1) {
     return 0;
   }
   
@@ -437,7 +424,7 @@ int akinetic_fling(AKINETIC * p) {
 int akinetic_fling_dampered(AKINETIC * p, float dampersz) {
   p->velocity = p->velocity * dampersz;
   
-  if (abs(p->velocity) < 0.1) {
+  if (fabs(p->velocity) < 0.1) {
     return 0;
   }
   

@@ -16,6 +16,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <signal.h>
 
 #ifndef _AROMA_NODEBUG
 #include <sys/statfs.h>
@@ -26,7 +27,7 @@
 #define AROMA_MEM_TMPDIR "/tmp/aroma-memory"
 long aroma_isexist_mem(void * x) {
   char pn[256];
-  snprintf(pn, 256, "%s/%i", AROMA_MEM_TMPDIR, (long) x);
+  snprintf(pn, 256, "%s/%li", AROMA_MEM_TMPDIR, (long) x);
   FILE * fp = fopen(pn, "r");
   
   if (fp) {
@@ -43,7 +44,7 @@ void aroma_touch_memaddr(void * x, long sz, long line, char * filename) {
   
   if (fz == 0) {
     char pn[256];
-    snprintf(pn, 256, "%s/%i", AROMA_MEM_TMPDIR, (long) x);
+    snprintf(pn, 256, "%s/%li", AROMA_MEM_TMPDIR, (long) x);
     FILE * fp = fopen(pn, "wb");
     fwrite(&sz, 1, sizeof(long), fp);
     fwrite(&line, 1, sizeof(long), fp);
@@ -59,7 +60,7 @@ void aroma_unlink_memaddr(void * x) {
   
   if (fz) {
     char pn[256];
-    snprintf(pn, 256, "%s/%i", AROMA_MEM_TMPDIR, (long) x);
+    snprintf(pn, 256, "%s/%li", AROMA_MEM_TMPDIR, (long) x);
     unlink(pn);
   }
 }
@@ -99,7 +100,7 @@ void aroma_dump_malloc() {
             long fl = 0;
             char fn[256];
             memset(fn, 0, 256);
-            snprintf(pn, 256, "%s/%i", AROMA_MEM_TMPDIR, (long) memaddr);
+            snprintf(pn, 256, "%s/%li", AROMA_MEM_TMPDIR, (long) memaddr);
             FILE * fp = fopen(pn, "r");
             
             if (fp) {
@@ -113,10 +114,10 @@ void aroma_dump_malloc() {
             memset(str, 0, 10);
             
             if (fz > 0) {
-              snprintf(str, 10, (char *) memaddr);
+              snprintf(str, 10, "%s", (char *) memaddr);
             }
             
-            printf("[0x%x %ib] = \"%s\" LINE %i <%s>\n", memaddr, fz, fn, fl, str);
+            printf("[0x%lx %lib] = \"%s\" LINE %li <%s>\n", memaddr, fz, fn, fl, str);
           }
         }
         

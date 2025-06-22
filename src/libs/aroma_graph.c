@@ -552,7 +552,7 @@ byte ag_draw_strecth_ex(
       for (j = 0; j < dw; j++) {
         x2   = (rat >> 16);
         *t = ag_calculatealpha(*t, p[x2], alpha);
-        *t++;
+        t++;
         rat += x_ratio;
       }
     }
@@ -605,7 +605,7 @@ byte ag_draw_opa(
     if (withdest) {
       for (x = 0; x < sw; x++) {
         *t = ag_calculatealpha(*t, *p++, alpha);
-        *t++;
+        t++;
       }
     }
     else {
@@ -1079,7 +1079,7 @@ void ag_sync_force() {
   }
 }
 static void * ag_sync_fade_thread(void * cookie) {
-  int frame = (int) cookie;
+  int frame = (int)(intptr_t) cookie;
   ag_isbusy = 0;
   ag_sync_locked = 1;
   ag_refreshlock = 1;
@@ -1152,11 +1152,11 @@ static void * ag_sync_fade_thread(void * cookie) {
   return NULL;
 }
 void ag_sync_fade_wait(int frame) {
-  ag_sync_fade_thread((void *) frame);
+  ag_sync_fade_thread((void *)(intptr_t) frame);
 }
 void ag_sync_fade(int frame) {
   pthread_t threadsyncfade;
-  pthread_create(&threadsyncfade, NULL, ag_sync_fade_thread, (void *) frame);
+  pthread_create(&threadsyncfade, NULL, ag_sync_fade_thread, (void *)(intptr_t) frame);
   pthread_detach(threadsyncfade);
 }
 byte ag_blur_h(CANVAS * d, CANVAS * s, int radius) {
@@ -2179,28 +2179,18 @@ int ag_fontwidth_kerning(int c, int p, byte isbig) {
 }
 byte ag_isfreetype(byte isbig) {
   switch (isbig) {
-    case 2:
-      return AG_HEADER_FONT_FT;
-      break;
-    case 1:
-      return AG_BIG_FONT_FT;
-      break;
-    case 0:
-      return AG_SMALL_FONT_FT;
-      break;
+    case 2: return AG_HEADER_FONT_FT;
+    case 1: return AG_BIG_FONT_FT;
+    case 0: return AG_SMALL_FONT_FT;
+    default: return AG_SMALL_FONT_FT;
   }
 }
 PNGFONTS * ag_getfont(byte isbig) {
   switch (isbig) {
-    case 2:
-      return &AG_HEADER_FONT;
-      break;
-    case 1:
-      return &AG_BIG_FONT;
-      break;
-    case 0:
-      return &AG_SMALL_FONT;
-      break;
+    case 2: return &AG_HEADER_FONT;
+    case 1: return &AG_BIG_FONT;
+    case 0: return &AG_SMALL_FONT;
+    default: return &AG_SMALL_FONT;
   }
 }
 int ag_tabwidth(int x, byte isbig) {

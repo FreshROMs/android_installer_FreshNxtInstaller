@@ -537,14 +537,16 @@ byte    aft_load(const char * source_name, int size, byte isbig, char * relative
 // byte    aft_drawfont(CANVAS * _b, byte isbig, int fpos, int xpos, int ypos, color cl,byte underline,byte bold);
 byte aft_drawfont(CANVAS * _b, byte isbig, int fpos, int xpos, int ypos, color cl, byte underline, byte bold, byte italic, byte lcd);
 // byte    aft_loadfont(char * zpath, byte size, byte isbig);
+
 //
 // AROMA PNG Font Functions
 //
 byte      apng_loadfont(PNGFONTS * pngfont, const char * imgname);      // Load PNG Font From Zip Item
 byte      apng_drawfont(CANVAS * _b, PNGFONTS * p, byte fpos,           // Draw PNG Font Into Canvas
                         int xpos, int ypos, color cl, byte underline, byte bold);
-byte      apng_draw_ex(CANVAS * _b, PNGCANVAS * p, int xpos,            // Draw PNG Font Into Canvas
-                       int ypos, int sxpos, int sypos, int sw, int sh);            // With Extra Arguments
+byte      apng_draw_ex(CANVAS * _b, PNGCANVAS * p, int xpos,            // Draw PNG Font Into Canvas With Extra Arguments
+                       int ypos, int sxpos, int sypos, int sw, int sh);
+void      apng_closefont(PNGFONTS *p);                                  // Release Font Memory
 
 //
 // AROMA Graphic Function
@@ -558,16 +560,17 @@ void      ag_close_thread(); // Close Graph Thread
 void      ag_close();     // Close AROMA Graph and Framebuffers
 void      ag_changecolorspace(int r, int g, int b, int a); // Change Color Space
 
-void      ag_sync();                        // Sync Main Canvas with Framebuffer
-int       agw();                            // Get Display X Resolution
-int       agh();                            // Get Display Y Resolution
-int       agdp();                           // Get Device Pixel Size (WVGA = 3, HVGA = 2)
-void      set_agdp(int dp);                 // Force Graphic Device Pixel Size
-void      ag_sync_fade(int frame);          // Transition Sync - Async
-void      ag_sync_fade_wait(int frame);     // Transition Sync - Sync
-void      ag_sync_force();                  // Force to Sync
-void      ag_setbusy();                     // Set Display to show Please Wait Progress
-void      ag_setbusy_withtext(char * text); // Display Busy Progress with Custom Text
+void      ag_sync();                                 // Sync Main Canvas with Framebuffer
+int       agw();                                     // Get Display X Resolution
+int       agh();                                     // Get Display Y Resolution
+int       agdp();                                    // Get Device Pixel Size (WVGA = 3, HVGA = 2)
+void      set_agdp(int dp);                          // Force Graphic Device Pixel Size
+void      ag_sync_fade(int frame);                   // Transition Sync - Async
+void      ag_sync_fade_wait(int frame);              // Transition Sync - Sync
+void      ag_sync_force();                           // Force to Sync
+byte      ag_blur(CANVAS *d, CANVAS *s, int radius); // Add blur to an image
+void      ag_setbusy();                              // Set Display to show Please Wait Progress
+void      ag_setbusy_withtext(char * text);          // Display Busy Progress with Custom Text
 
 //
 // AROMA Canvas Functions
@@ -703,6 +706,7 @@ void    ev_exit(void);
 int     ev_get(struct input_event * ev, unsigned dont_wait);
 int     ui_wait_key();
 int     ui_key_pressed(int key);
+void    ui_clear_key_queue_ex();
 void    ui_clear_key_queue();
 int     touchX();
 int     touchY();
@@ -713,7 +717,7 @@ int     atmsg();
 //
 // AROMA System Library Functions
 //
-byte alib_copy(char * src, char * dst);
+byte alib_copy(const char * src, const char * dst);
 int * ai_rtrimw(int * chr, int len);
 char * ai_rtrim(char * chr);
 char * ai_trim(char * chr);

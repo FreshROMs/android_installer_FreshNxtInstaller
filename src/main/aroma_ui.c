@@ -22,7 +22,11 @@
  */
 
 #include <sys/stat.h>       //-- Filesystem Stats
+#include <ctype.h>          //-- Character Classifier
 #include "../edify/expr.h"  //-- Edify Parser
+#include "../edify/parser.h"
+#include "../edify/lex.yy.h"
+
 #include <installer/aroma.h>
 
 #define APARSE_MAXHISTORY 256
@@ -493,7 +497,7 @@ char * aui_readfromzip(char * name) {
     return NULL;
   }
   
-  return filedata.data;
+  return (char *) filedata.data;
 }
 
 //*
@@ -786,20 +790,18 @@ Value * AROMA_FILEGETPROP(const char * name, State * state, int argc, Expr * arg
   if (argc != 2) {
     return ErrorAbort(state, "%s() expects 2 args (path, key), got %d", name, argc);
   }
-  
-  //-- This is Busy Function
-  ag_setbusy();
-  //-- Get Arguments
-  _INITARGS();
-  //-- Parse The Prop
-  char * result;
-  
+
+  ag_setbusy(); // Show busy animation or lock UI if applicable
+  _INITARGS();  // Initialize argument array (args[0], args[1])
+
+  char *result = NULL;
+
   if (strcmp(name, "file_getprop") == 0) {
     result = aui_parseprop(args[0], args[1]);
   }
   else if (strcmp(name, "prop") == 0) {
     char path[256];
-    snprintf(path, 256, "%s/%s", AROMA_TMP, args[0]);
+    snprintf(path, sizeof(path), "%s/%s", AROMA_TMP, args[0]);
     result = aui_parseprop(path, args[1]);
   }
   else if (strcmp(name, "zipprop") == 0) {
@@ -807,17 +809,20 @@ Value * AROMA_FILEGETPROP(const char * name, State * state, int argc, Expr * arg
   }
   else if (strcmp(name, "resprop") == 0) {
     char path[256];
-    snprintf(path, 256, "%s/%s", AROMA_DIR, args[0]);
+    snprintf(path, sizeof(path), "%s/%s", AROMA_DIR, args[0]);
     result = aui_parsepropzip(path, args[1]);
   }
-  
+  else {
+    _FREEARGS();
+    return ErrorAbort(state, "Unknown function name: %s", name);
+  }
+
   if (result == NULL) {
     result = strdup("");
   }
-  
-  //-- Release Arguments
+
+  //-- Release arguments and return
   _FREEARGS();
-  //-- Return
   return StringValue(result);
 }
 
@@ -3542,7 +3547,7 @@ Value * AROMA_INCLUDE(const char * name, State * state, int argc, Expr * argv[])
     return ErrorAbort(state, "%s() File to include %s not found", name, fname);
   }
   
-  char * script_data = script_installer.data;
+  char * script_data = (char *) script_installer.data;
   
   if (script_installer.sz > 3) {
     //-- Check UTF-8 File Header
@@ -3755,7 +3760,7 @@ byte aui_start() {
     return 0;
   }
   
-  char * script_data = script_installer.data;
+  char * script_data = (char *) script_installer.data;
   
   if (script_installer.sz > 3) {
     //-- Check UTF-8 File Header

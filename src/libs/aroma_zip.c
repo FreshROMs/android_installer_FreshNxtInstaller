@@ -21,6 +21,9 @@
  *
  */
 
+#include <fcntl.h>
+#include <sys/stat.h>
+
 #include "../../libs/minzip/Zip.h"
 #include <installer/aroma.h>
 
@@ -34,7 +37,7 @@ byte az_init(const char * filename) {
     return 0;
   }
   
-  mkdir(AROMA_TMP, 755);
+  mkdir(AROMA_TMP, 0755);
   return 1;
 }
 
@@ -57,7 +60,7 @@ byte az_readmem(AZMEM * out, const char * zpath, byte bytesafe) {
   out->data = malloc(out->sz);
   
   //memset(out->data,0,out->sz);
-  if (!mzReadZipEntry(&zip, se, out->data, se->uncompLen)) {
+  if (!mzReadZipEntry(&zip, se, (char *) out->data, se->uncompLen)) {
     free(out->data);
     return 0;
   }

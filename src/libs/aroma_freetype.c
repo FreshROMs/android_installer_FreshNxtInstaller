@@ -394,7 +394,7 @@ byte aft_load(const char * source_name, int size, byte isbig, char * relativeto)
   int i = 0;
   int c = 0;
   FT_Face ftfaces[10];
-  char  * ftmem[10];
+  unsigned char  * ftmem[10];
   
   for (i = 0; i < count; i++) {
     if (strlen(zpaths[i]) > 0) {
