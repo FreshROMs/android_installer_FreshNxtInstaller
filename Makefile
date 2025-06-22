@@ -65,26 +65,26 @@ SOURCES := \
 	libs/minzip/SysUtil.c \
 	libs/minzip/Zip.c \
 \
-	libs/freetype/autofit/autofit.c \
-	libs/freetype/base/basepic.c \
-	libs/freetype/base/ftapi.c \
-	libs/freetype/base/ftbase.c \
-	libs/freetype/base/ftbbox.c \
-	libs/freetype/base/ftbitmap.c \
-	libs/freetype/base/ftglyph.c \
-	libs/freetype/base/ftinit.c \
-	libs/freetype/base/ftpic.c \
-	libs/freetype/base/ftstroke.c \
-	libs/freetype/base/ftsynth.c \
-	libs/freetype/base/ftsystem.c \
-	libs/freetype/cff/cff.c \
-	libs/freetype/pshinter/pshinter.c \
-	libs/freetype/psnames/psnames.c \
-	libs/freetype/raster/raster.c \
-	libs/freetype/sfnt/sfnt.c \
-	libs/freetype/smooth/smooth.c \
-	libs/freetype/truetype/truetype.c \
-	libs/freetype/base/ftlcdfil.c \
+	libs/freetype/src/autofit/autofit.c \
+	libs/freetype/src/base/ftinit.c \
+	libs/freetype/src/base/ftbase.c \
+	libs/freetype/src/base/ftbitmap.c \
+	libs/freetype/src/base/ftdebug.c \
+	libs/freetype/src/base/ftglyph.c \
+	libs/freetype/src/base/ftmm.c \
+	libs/freetype/src/base/ftsynth.c \
+	libs/freetype/src/base/ftsystem.c \
+	libs/freetype/src/cff/cff.c \
+	libs/freetype/src/gzip/ftgzip.c \
+	libs/freetype/src/lzw/ftlzw.c \
+	libs/freetype/src/psaux/psaux.c \
+	libs/freetype/src/pshinter/pshinter.c \
+	libs/freetype/src/psnames/psnames.c \
+	libs/freetype/src/raster/raster.c \
+	libs/freetype/src/sfnt/sfnt.c \
+	libs/freetype/src/smooth/ftgrays.c \
+	libs/freetype/src/smooth/ftsmooth.c \
+	libs/freetype/src/truetype/truetype.c \
 \
 	$(wildcard src/edify/*.c) \
 	$(wildcard src/libs/*.c) \
@@ -104,6 +104,8 @@ INCLUDES := \
 	-Ilibs/png \
 	-Iinclude/png \
 	-Ilibs/minutf8/include \
+	-Ilibs/freetype/include \
+	-Iinclude/freetype \
 	-Iinclude/aroma \
 	-Iinclude \
 	-Isrc/edify
@@ -125,8 +127,10 @@ CFLAGS := \
 	-flto \
 	-fPIC -DPIC \
 	-D_FILE_OFFSET_BITS=64 \
+	-DFT_CONFIG_MODULES_H=\"ftmodule.h\" \
 	-DFT2_BUILD_LIBRARY=1 \
 	-D_AROMA_NODEBUG \
+	-Wno-parentheses-equality \
 	$(INCLUDES) \
 	$(AROMA_VERSION_FLAGS)
 

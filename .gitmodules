@@ -3,3 +3,8 @@
 	url = https://github.com/pnggroup/libpng.git
 	shallow = true
 	ignore = dirty
+[submodule "libs/freetype"]
+	path = libs/freetype
+	url = https://github.com/freetype/freetype.git
+	shallow = true
+	ignore = dirty

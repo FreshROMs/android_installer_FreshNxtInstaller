@@ -42,7 +42,8 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_TRUETYPE_IDS_H
-#include <freetype/ftsynth.h>
+#include FT_SYNTHESIS_H
+#include FT_BITMAP_H
 #include FT_GLYPH_H
 
 #include <installer/aroma_mem.h>
