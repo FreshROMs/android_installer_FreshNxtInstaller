@@ -748,7 +748,7 @@ Value * AROMA_THEME(const char * name, State * state, int argc, Expr * argv[]) {
 }
 
 //*
-//* package_extract
+//* package_extract_file
 //*
 Value * AROMA_EXTRACT(const char * name, State * state, int argc, Expr * argv[]) {
   if (argc != 2) {
@@ -761,26 +761,26 @@ Value * AROMA_EXTRACT(const char * name, State * state, int argc, Expr * argv[])
   _INITARGS();
   byte res = 0;
   char dpath[256];
-  snprintf(dpath, 256, "%s/%s", AROMA_TMP, args[1]);
+
+  //-- Extract to /tmp if destination starts with '/'
+  if (args[1][0] == '/') {
+    snprintf(dpath, sizeof(dpath), "%s/%s", AROMA_SYSTMP, args[1]);
+  } else {
+    snprintf(dpath, sizeof(dpath), "%s/%s", AROMA_TMP, args[1]);
+  }
   
   if (strcmp("ziptotmp", name) == 0) {
     res = az_extract(args[0], dpath);
   }
   else if (strcmp("restotmp", name) == 0) {
     char zpath[256];
-    snprintf(zpath, 256, "%s/%s", AROMA_DIR, args[0]);
+    snprintf(zpath, sizeof(zpath), "%s/%s", AROMA_DIR, args[0]);
     res = az_extract(zpath, dpath);
   }
   
-  //-- Release Arguments
+  //-- Release arguments and return
   _FREEARGS();
-  
-  //-- Return
-  if (res) {
-    return StringValue(strdup("1"));
-  }
-  
-  return StringValue(strdup(""));
+  return StringValue(strdup(res ? "1" : ""));
 }
 
 //*

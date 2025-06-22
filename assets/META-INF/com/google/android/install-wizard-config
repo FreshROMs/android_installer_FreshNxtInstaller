@@ -70,7 +70,7 @@ agreebox(
 pleasewait("<~wait.install.scan>");
 resexec("tools/fresh-tk", "mounts_checker");
 exec("/sbin/mount", file_getprop("/tmp/toolkit.prop", "block.system"), file_getprop("/tmp/toolkit.prop", "block.system.mount"));
-restotmp("fresh.prop", "fresh.prop");
+restotmp("fresh.prop", "/fresh.prop");
 resexec("tools/fresh-tk", "install_rom_check");
 
 if file_getprop("/tmp/toolkit.prop", "system.exist.rom") == "false" then

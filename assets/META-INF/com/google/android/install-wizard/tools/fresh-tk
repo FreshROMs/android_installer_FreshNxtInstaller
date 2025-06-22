@@ -20,7 +20,6 @@ SVZIP="${TOOLS}/7za" # the location of the 7zip arm binary.
 XMLSTARLET="${TOOLS}/xmlstarlet" # the location of the xmlstarlet arm binary.
 PROP="/tmp/toolkit.prop" # prop file used to counter-check values for the script
 FLASH='/tmp/fresh.prop' # ROM prop file used for version checking
-FLASH_WIZARD='/tmp/install-wizard/fresh.prop' # ROM prop file used for version checking
 INSTALL_WIZARD_PATH="/tmp/install-wizard" # Path of the install wizard
 
 export PATH="${TOOLS}:${PATH}"
@@ -253,12 +252,7 @@ install_rom_check() {
 	# Check for an existing ROM installation
 	if [ -e "${ROM}" ]; then
 		ROM_EXIST_VERSION=$(file_getprop "${ROM}" 'ro.fresh.build.date.utc')
-
-		if [ -f "${FLASH}" ]; then
-			ROM_OTA_VERSION=$(file_getprop "${FLASH}" 'ro.fresh.build.date.utc')
-		else
-			ROM_OTA_VERSION=$(file_getprop "${FLASH_WIZARD}" 'ro.fresh.build.date.utc')
-		fi
+		ROM_OTA_VERSION=$(file_getprop "${FLASH}" 'ro.fresh.build.date.utc')
 		
 		ROM_EXIST_INSTALL="true"
 
