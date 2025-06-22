@@ -45,13 +45,6 @@
 #include <freetype/ftsynth.h>
 #include FT_GLYPH_H
 
-//
-// ARM NEON - Testing Only
-//
-#ifdef __ARM_NEON__
-#include <arm_neon.h>
-#endif
-
 #include "aroma_mem.h"
 
 // Defined in build command

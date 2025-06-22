@@ -2,7 +2,6 @@
 ARCH := arm64
 ARCH_ASFLAGS :=
 ARCH_CFLAGS := -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -s -Os -s -Wl,--allow-multiple-definition -save-temps -Os -static -fdata-sections -ffunction-sections -Wl,--gc-sections -fPIC -DPIC -Wl,-s -D_AROMA_NODEBUG -ffast-math -fomit-frame-pointer
-USE_NEON := 0
 
 
 # Version info
@@ -24,9 +23,6 @@ SOURCES_zlib := \
 	libs/zlib/inflate.c \
 	libs/zlib/inftrees.c \
 	libs/zlib/zutil.c
-ifeq ($(USE_NEON),1)
-	SOURCES_zlib += libs/zlib/inflate_fast_copy_neon.s
-endif
 
 SOURCES_libpng := \
 	libs/png/png.c \
@@ -42,11 +38,6 @@ SOURCES_libpng := \
 	libs/png/pngset.c \
 	libs/png/pngtrans.c \
 	libs/png/pngvcrd.c
-
-ifeq ($(USE_NEON),1)
-	SOURCES_libpng += libs/png/png_read_filter_row_neon.s
-endif
-
 
 SOURCES_minutf8 := libs/minutf8/minutf8.c
 

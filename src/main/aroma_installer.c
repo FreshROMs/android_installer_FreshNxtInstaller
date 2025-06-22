@@ -23,7 +23,6 @@
 
 #include <sys/stat.h>
 #include <time.h>
-#include <errno.h>
 #include "../aroma.h"
 
 static byte      ai_run              = 0;
