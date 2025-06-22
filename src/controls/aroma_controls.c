@@ -21,7 +21,7 @@
  *
  */
 #include <sched.h>
-#include "../aroma.h"
+#include <installer/aroma.h>
 
 /***************************[ GLOBAL VARIABLES ]**************************/
 static AC_CONFIG acfg_var;

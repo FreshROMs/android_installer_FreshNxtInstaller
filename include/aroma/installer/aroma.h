@@ -45,7 +45,7 @@
 #include <freetype/ftsynth.h>
 #include FT_GLYPH_H
 
-#include "aroma_mem.h"
+#include <installer/aroma_mem.h>
 
 // Defined in build command
 // #define _AROMA_NODEBUG

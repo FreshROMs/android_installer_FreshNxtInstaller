@@ -26,7 +26,7 @@
 #include <dirent.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include "../aroma.h"
+#include <installer/aroma.h>
 
 /* Micro Sleep */
 void aSleep(long ms) {

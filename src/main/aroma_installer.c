@@ -23,7 +23,7 @@
 
 #include <sys/stat.h>
 #include <time.h>
-#include "../aroma.h"
+#include <installer/aroma.h>
 
 static byte      ai_run              = 0;
 static int       ai_progani_pos      = 0;

@@ -25,7 +25,7 @@
 #include <linux/fb.h>
 #include <sys/mman.h>
 #include <pthread.h>
-#include "../aroma.h"
+#include <installer/aroma.h>
 
 /*****************************[ GLOBAL VARIABLES ]*****************************/
 static int                             ag_fb   = 0;       //-- FrameBuffer Handler

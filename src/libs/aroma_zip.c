@@ -22,7 +22,7 @@
  */
 
 #include "../../libs/minzip/Zip.h"
-#include "../aroma.h"
+#include <installer/aroma.h>
 
 /*****************************[ GLOBAL VARIABLES ]*****************************/
 static ZipArchive zip;

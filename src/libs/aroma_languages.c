@@ -21,7 +21,7 @@
  *
  */
 
-#include "../aroma.h"
+#include <installer/aroma.h>
 
 AARRAYP alang = NULL;
 

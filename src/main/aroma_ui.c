@@ -23,7 +23,7 @@
 
 #include <sys/stat.h>       //-- Filesystem Stats
 #include "../edify/expr.h"  //-- Edify Parser
-#include "../aroma.h"
+#include <installer/aroma.h>
 
 #define APARSE_MAXHISTORY 256
 

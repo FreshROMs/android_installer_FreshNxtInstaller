@@ -96,8 +96,9 @@ OBJS := \
 ##
 INCLUDES := \
 	-Ilibs/minutf8/include \
+	-Iinclude/aroma \
 	-Iinclude \
-	-Isrc
+	-Isrc/edify
 
 AROMA_VERSION_FLAGS := \
 	-DAROMA_NAME="\"$(AROMA_NAME)\"" \

@@ -20,7 +20,7 @@
  * AROMA UI: Menubox List Window Control
  *
  */
-#include "../aroma.h"
+#include <installer/aroma.h>
 
 /***************************[ MENU BOX ]**************************/
 typedef struct {

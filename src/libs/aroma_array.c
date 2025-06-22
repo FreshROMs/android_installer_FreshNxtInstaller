@@ -21,7 +21,7 @@
  *
  */
 
-#include "../aroma.h"
+#include <installer/aroma.h>
 
 AARRAYP aarray_create() {
   AARRAYP a = (AARRAYP) malloc(sizeof(AARRAY));

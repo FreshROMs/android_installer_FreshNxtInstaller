@@ -21,7 +21,7 @@
  *
  */
 
-#include "../aroma.h"
+#include <installer/aroma.h>
 #include FT_LCD_FILTER_H
 #include FT_BITMAP_H
 #include FT_OUTLINE_H

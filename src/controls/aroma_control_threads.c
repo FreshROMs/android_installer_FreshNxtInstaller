@@ -20,7 +20,7 @@
  * AROMA UI: Thread Manager for Window Controls
  *
  */
-#include "../aroma.h"
+#include <installer/aroma.h>
 
 /*************************[ SCROLL TO ]**************************/
 typedef struct  {
