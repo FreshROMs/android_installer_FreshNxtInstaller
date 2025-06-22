@@ -95,6 +95,7 @@ OBJS := \
 ## Compiler flags
 ##
 INCLUDES := \
+	-Ilibs/minutf8/include \
 	-Iinclude \
 	-Isrc
 
