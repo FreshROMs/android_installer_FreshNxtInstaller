@@ -9,13 +9,14 @@ AROMA_CN      := Red-Eyes Black Dragon
 ##
 ## Compiler options
 ##
+API := 34
 ARCH := aarch64
-CROSS_COMPILE := aarch64-linux-gnu-
+TARGET := $(ARCH)-linux-android$(API)
 
-CC := $(CROSS_COMPILE)gcc
-CXX := $(CROSS_COMPILE)g++
-AS := $(CROSS_COMPILE)as
-AR := $(CROSS_COMPILE)ar
+CC := $(TARGET)-clang
+CXX := $(TARGET)-clang++
+AS := $(TARGET)-clang
+AR := $(TARGET)ar
 
 ##
 ## Directories
@@ -114,6 +115,7 @@ CFLAGS := \
 	-ftree-vectorize \
 	-funsafe-math-optimizations \
 	-fomit-frame-pointer \
+	-flto \
 	-fPIC -DPIC \
 	-D_FILE_OFFSET_BITS=64 \
 	-DFT2_BUILD_LIBRARY=1 \
@@ -129,18 +131,18 @@ CXXFLAGS := \
 	-ftree-vectorize \
 	-funsafe-math-optimizations \
 	-fomit-frame-pointer \
+	-flto \
 	-fPIC -DPIC \
 	-D_FILE_OFFSET_BITS=64 \
 	$(INCLUDES)
 
-ASFLAGS :=
+ASFLAGS := $(CFLAGS)
 
 ##
 ## Linker flags
 ##
 LDLIBS := \
-	-lm \
-	-lpthread
+	-lm
 
 LDFLAGS := \
 	-Wl,--gc-sections \

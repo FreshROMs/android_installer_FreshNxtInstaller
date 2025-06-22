@@ -32,39 +32,39 @@ set -e
 
 # [
 TOP="$PWD"
-TOOLCHAIN="$HOME/Android/toolchains/gcc-linaro-4.9.4-2017.01-x86_64_aarch64-linux-gnu"
-TOOLCHAIN_EXT="$TOP/toolchain"
+NDK="$HOME/Android/Sdk/ndk/27.2.12479018"
+NDK_EXT="$TOP/ndk"
 
 script_echo() { echo "  $1"; }
 # ]
 
 ##
-## Verify toolchain
+## Verify NDK
 ##
-if [ -d "$TOOLCHAIN" ]; then
-	script_echo "I: Toolchain found at default location."
+if [ -d "$NDK" ]; then
+	script_echo "I: NDK found at default location."
 
-	export PATH="$TOOLCHAIN/bin:$PATH"
-	export LD_LIBRARY_PATH="$TOOLCHAIN/lib:$LD_LIBRARY_PATH"
+	export TOOLCHAIN="$NDK/toolchains/llvm/prebuilt/linux-x86_64"
 else
-	if [ -d "$TOOLCHAIN_EXT" ]; then
-		script_echo "I: Toolchain found at repository root."
+	if [ -d "$NDK_EXT" ]; then
+		script_echo "I: NDK found at repository root."
 	else
-		script_echo "I: Toolchain not found at default location or repository root."
-		script_echo "   Downloading recommended toolchain at $TOOLCHAIN_EXT..."
+		script_echo "I: NDK not found at default location or repository root."
+		script_echo "   Downloading NDK at $NDK_EXT..."
 
-		mkdir -p "$TOOLCHAIN_EXT"
-		wget -O "$TOOLCHAIN_EXT/toolchain.tar.xz" \
-			https://releases.linaro.org/components/toolchain/binaries/4.9-2017.01/aarch64-linux-gnu/gcc-linaro-4.9.4-2017.01-x86_64_aarch64-linux-gnu.tar.xz &>/dev/null
+		wget -O "$TOP/ndk.zip" \
+			https://dl.google.com/android/repository/android-ndk-r27c-linux.zip &>/dev/null
 
-		unxz "$TOOLCHAIN_EXT/toolchain.tar.xz"
-		tar --strip-components=1 -xf "$TOOLCHAIN_EXT/toolchain.tar" -C "$TOOLCHAIN_EXT"
-		rm -f "$TOOLCHAIN_EXT/toolchain.tar"
+		unzip -q "$TOP/ndk.zip"
+		mv 'android-ndk-r27c' "$NDK_EXT"
+		rm -f "$TOP/ndk.zip"
 	fi
 
-	export PATH="$TOOLCHAIN_EXT/bin:$PATH"
-	export LD_LIBRARY_PATH="$TOOLCHAIN_EXT/lib:$LD_LIBRARY_PATH"
+	export TOOLCHAIN="$NDK_EXT/toolchains/llvm/prebuilt/linux-x86_64"
 fi
+
+export PATH="$TOOLCHAIN/bin:$PATH"
+export LD_LIBRARY_PATH="$TOOLCHAIN/lib:$LD_LIBRARY_PATH"
 script_echo " "
 
 ##
