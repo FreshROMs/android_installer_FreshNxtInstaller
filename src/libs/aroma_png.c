@@ -160,30 +160,37 @@ byte apng_load(PNGCANVAS * pngcanvas, char * imgname) {
   png_set_sig_bytes(png_ptr, sizeof(header));
   png_read_info(png_ptr, info_ptr);
   
+  //-- Retrieve PNG Properties
+  png_byte bit_depth = png_get_bit_depth(png_ptr, info_ptr);
+  png_byte color_type = png_get_color_type(png_ptr, info_ptr);
+  int channels = png_get_channels(png_ptr, info_ptr);
+  png_uint_32 width = png_get_image_width(png_ptr, info_ptr);
+  png_uint_32 height = png_get_image_height(png_ptr, info_ptr);
+  
   //-- Check Color Mode
   if (!(
-        (info_ptr->bit_depth == 8 &&
+        (bit_depth == 8 &&
          (
-           (info_ptr->channels == 3 && info_ptr->color_type == PNG_COLOR_TYPE_RGB) ||
-           (info_ptr->channels == 4 && info_ptr->color_type == PNG_COLOR_TYPE_RGBA)
+           (channels == 3 && color_type == PNG_COLOR_TYPE_RGB) ||
+           (channels == 4 && color_type == PNG_COLOR_TYPE_RGBA)
          )
-        ) || (info_ptr->channels == 1 && info_ptr->color_type == PNG_COLOR_TYPE_PALETTE)
+        ) || (channels == 1 && color_type == PNG_COLOR_TYPE_PALETTE)
       )) {
     LOGE("PNG(%s): Not Supported. Only 8 Bit Depth with 3/4 Channel or Pallete.\n", zpath);
     goto exit;
   }
   
-  LOGI("PNG(%s): %ix%ix%i\n", zpath, info_ptr->width, info_ptr->height, info_ptr->channels);
+  LOGI("PNG(%s): %ix%ix%i\n", zpath, width, height, channels);
   
-  if (info_ptr->color_type == PNG_COLOR_TYPE_PALETTE) {
+  if (color_type == PNG_COLOR_TYPE_PALETTE) {
     png_set_palette_to_rgb(png_ptr);
     png_read_update_info(png_ptr, info_ptr);
   }
   
   //-- Initializing Canvas
-  pngcanvas->w    = info_ptr->width;
-  pngcanvas->h    = info_ptr->height;
-  pngcanvas->c    = info_ptr->channels;
+  pngcanvas->w    = width;
+  pngcanvas->h    = height;
+  pngcanvas->c    = channels;
   pngcanvas->s    = pngcanvas->w * pngcanvas->h;
   pngcanvas->r    = malloc(pngcanvas->s);
   pngcanvas->g    = malloc(pngcanvas->s);
@@ -386,17 +393,24 @@ byte apng_loadfont(PNGFONTS * pngfont, const char * imgname) {
   png_set_sig_bytes(png_ptr, sizeof(header));
   png_read_info(png_ptr, info_ptr);
   
+  //-- Retrieve PNG Properties
+  png_byte bit_depth = png_get_bit_depth(png_ptr, info_ptr);
+  png_byte color_type = png_get_color_type(png_ptr, info_ptr);
+  int channels = png_get_channels(png_ptr, info_ptr);
+  png_uint_32 width = png_get_image_width(png_ptr, info_ptr);
+  png_uint_32 height = png_get_image_height(png_ptr, info_ptr);
+  
   //-- Check Color Mode
-  if (!(info_ptr->bit_depth == 8 && (info_ptr->channels == 4 && info_ptr->color_type == PNG_COLOR_TYPE_RGBA))) {
+  if (!(bit_depth == 8 && (channels == 4 && color_type == PNG_COLOR_TYPE_RGBA))) {
     LOGE("PNG FONT(%s): Not Supported. Only 8 Bit Depth with 4 Channel.\n", zpath);
     goto exit;
   }
   
-  LOGI("PNG(%s): %ix%ix%i\n", zpath, info_ptr->width, info_ptr->height, info_ptr->channels);
+  LOGI("PNG(%s): %ix%ix%i\n", zpath, width, height, channels);
   //-- Initializing Canvas
-  pngfont->w    = info_ptr->width;
-  pngfont->h    = info_ptr->height;
-  pngfont->c    = info_ptr->channels;
+  pngfont->w    = width;
+  pngfont->h    = height;
+  pngfont->c    = channels;
   pngfont->fh   = pngfont->h - 1;
   pngfont->s    = pngfont->w * pngfont->fh;
   pngfont->d    = malloc(pngfont->s);

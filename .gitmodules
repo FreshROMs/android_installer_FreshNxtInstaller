@@ -1,0 +1,5 @@
+[submodule "libs/png"]
+	path = libs/png
+	url = https://github.com/pnggroup/libpng.git
+	shallow = true
+	ignore = dirty
