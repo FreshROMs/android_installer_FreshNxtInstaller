@@ -49,8 +49,10 @@ script_echo() { echo -e "  $1"; }
 # ]
 
 ##
-## Verify NDK
+## Verify submodules and NDK
 ##
+git submodule update --init --recursive
+
 if [ -d "$NDK" ]; then
 	script_echo "I: NDK found at default location."
 
