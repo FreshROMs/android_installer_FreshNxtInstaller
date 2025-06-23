@@ -1,0 +1,62 @@
+From 5f08dcb79ec03041f1670f36bf732118ff4dfa31 Mon Sep 17 00:00:00 2001
+From: Louis Poier <lpoier7@proton.me>
+Date: Mon, 23 Jun 2025 01:53:11 +0200
+Subject: [PATCH] libziparchive: Fix illegal cast errors
+
+This fixes the following compiler errors:
+libs/ziparchive/zip_archive.cc:1465:25: error: assigning to 'Bytef *' (aka 'unsigned char *') from 'const uint8_t *' (aka 'const unsigned char *') discards qualifiers
+ 1465 |       zstream.next_in = buf;
+      |                         ^~~
+
+libs/ziparchive/zip_archive_stream_entry.cc:239:27: error: assigning to 'Bytef *' (aka 'unsigned char *') from 'const uint8_t *' (aka 'const unsigned char *') discards qualifiers
+  239 |       z_stream_.next_in = res;
+      |                           ^~~
+
+libs/ziparchive/zip_writer.cc:393:24: error: assigning to 'Bytef *' (aka 'unsigned char *') from 'const uint8_t *' (aka 'const unsigned char *') discards qualifiers
+  393 |   z_stream_->next_in = reinterpret_cast<const uint8_t*>(data);
+      |                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Signed-off-by: Louis Poier <lpoier7@proton.me>
+
+diff --git a/zip_archive.cc b/zip_archive.cc
+index 7680053..d7d627f 100644
+--- a/zip_archive.cc
++++ b/zip_archive.cc
+@@ -1462,7 +1462,7 @@ static int32_t inflateImpl(const zip_archive::Reader& reader,
+ 
+       remaining_bytes -= read_size;
+ 
+-      zstream.next_in = buf;
++      zstream.next_in = const_cast<Bytef*>(buf);
+       zstream.avail_in = read_size;
+     }
+ 
+diff --git a/zip_archive_stream_entry.cc b/zip_archive_stream_entry.cc
+index 3158159..003f8c3 100644
+--- a/zip_archive_stream_entry.cc
++++ b/zip_archive_stream_entry.cc
+@@ -236,7 +236,7 @@ const std::vector<uint8_t>* ZipArchiveStreamEntryCompressed::Read() {
+ 
+       compressed_length_ -= bytes;
+       offset_ += bytes;
+-      z_stream_.next_in = res;
++      z_stream_.next_in = const_cast<Bytef*>(res);
+       z_stream_.avail_in = bytes;
+     }
+ 
+diff --git a/zip_writer.cc b/zip_writer.cc
+index 7f46f5f..3bdde70 100644
+--- a/zip_writer.cc
++++ b/zip_writer.cc
+@@ -390,7 +390,7 @@ int32_t ZipWriter::CompressBytes(FileEntry* file, const void* data, uint32_t len
+   CHECK(z_stream_->avail_out != 0);
+ 
+   // Prepare the input.
+-  z_stream_->next_in = reinterpret_cast<const uint8_t*>(data);
++  z_stream_->next_in = reinterpret_cast<Bytef*>(const_cast<void*>(data));
+   z_stream_->avail_in = len;
+ 
+   while (z_stream_->avail_in > 0) {
+-- 
+2.50.0
+

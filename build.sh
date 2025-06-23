@@ -35,7 +35,17 @@ TOP="$PWD"
 NDK="$HOME/Android/Sdk/ndk/27.2.12479018"
 NDK_EXT="$TOP/ndk"
 
-script_echo() { echo "  $1"; }
+declare -A TARGET_DIRS=(
+    [libpng]="$TOP/libs/png"
+    [libfreetype]="$TOP/libs/freetype"
+    [libziparchive]="$TOP/libs/ziparchive"
+    [core]="$TOP/vendor/core"
+    [logging]="$TOP/vendor/logging"
+    [libbase]="$TOP/vendor/libbase"
+    [googletest]="$TOP/vendor/googletest"
+)
+
+script_echo() { echo -e "  $1"; }
 # ]
 
 ##
@@ -68,9 +78,50 @@ export LD_LIBRARY_PATH="$TOOLCHAIN/lib:$LD_LIBRARY_PATH"
 script_echo " "
 
 ##
+## Apply patches
+##
+script_echo "I: Applying patches..."
+for target in "$TOP/patches/"*; do
+    TARGET=$(basename "$target")
+	TARGET_DIR="${TARGET_DIRS[$TARGET]}"
+
+	# Check if target is valid
+    if [ -z "$TARGET_DIR" ]; then
+        script_echo "E: Invalid patch target: '$TARGET'!"
+        script_echo "   Aborting... \n"
+        exit 1
+    fi
+
+    cd "${TARGET_DIRS[$TARGET]}"
+    for PATCH_FILE in "$target/"*.patch; do
+		PATCH_SUBJECT=$(sed -n 's/^Subject: \[PATCH\] //p' "$PATCH_FILE" 2>/dev/null)
+		[ ! -f "$PATCH_FILE" ] && continue
+
+		# Check if patch is already applied
+        if patch -p1 -R -N -t --dry-run < "$PATCH_FILE" >/dev/null; then
+            script_echo "  - Already applied '$PATCH_SUBJECT'."
+            continue
+        fi
+
+        # Check if patch can be applied
+        if ! patch -p1 -N -t --dry-run < "$PATCH_FILE" >/dev/null; then
+			script_echo " "
+            script_echo "E: Failed to apply '$PATCH_SUBJECT'! \n"
+            exit 1
+        fi
+
+        # Apply the patch
+        script_echo "  - Applying '$PATCH_SUBJECT'."
+        patch -p1 -N -t --no-backup-if-mismatch < "$PATCH_FILE" >/dev/null
+	done
+done
+script_echo " "
+
+##
 ## Compile FreshNxtInstaller
 ##
 script_echo "I: Compiling FreshNxtInstaler..."
+cd "$TOP"
 make clean
 make --quiet --jobs "$(nproc)"
 

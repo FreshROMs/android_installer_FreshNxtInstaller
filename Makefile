@@ -179,8 +179,6 @@ CXXFLAGS := \
 	-DLIBLOG_LOG_TAG=1006 \
 	-Wno-c99-designator \
 	-Wno-unused-value \
-	-Wno-c++11-narrowing \
-	-Wno-reorder-init-list \
 	-Wno-vla-cxx-extension \
 	-std=c++20 \
 	$(INCLUDES)

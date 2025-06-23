@@ -1,0 +1,40 @@
+From 1cd01d37eb0c07d433da88459c47b026cff5530c Mon Sep 17 00:00:00 2001
+From: Louis Poier <lpoier7@proton.me>
+Date: Mon, 23 Jun 2025 02:20:55 +0200
+Subject: [PATCH] libziparchive: Specify field designators in declaration order
+
+This fixes the following warning:
+libs/ziparchive/incfs_support/signal_handling.cpp:42:19: warning: ISO C++ requires field designators to be specified in declaration order; field 'sigaction::(anonymous union at ndk/27.2.12479018/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/bits/signal_types.h:76:34)' will be initialized after field 'sa_flags' [-Wreorder-init-list]
+   42 |       .sa_flags = 0x00000004,
+      |       ~~~~~~~~~~~~^~~~~~~~~~
+libs/ziparchive/incfs_support/signal_handling.cpp:41:7: note: previous initialization for field 'sigaction::(anonymous union at ndk/27.2.12479018/toolchains/llvm/prebuilt/linux-x86_64/bin/../sysroot/usr/include/bits/signal_types.h:76:34)' is here
+   41 |       .sa_sigaction = &handler,
+      |       ^~~~~~~~~~~~~~~~~~~~~~~~
+
+Signed-off-by: Louis Poier <lpoier7@proton.me>
+
+diff --git a/incfs_support/signal_handling.cpp b/incfs_support/signal_handling.cpp
+index 39cb0c6..2d555a6 100644
+--- a/incfs_support/signal_handling.cpp
++++ b/incfs_support/signal_handling.cpp
+@@ -37,10 +37,13 @@ SignalHandler& SignalHandler::instance() {
+ }
+ 
+ SignalHandler::SignalHandler() {
+-  const struct sigaction action = {
+-      .sa_sigaction = &handler,
+-      .sa_flags = SA_SIGINFO,
+-  };
++  const struct sigaction action = [] {
++      struct sigaction sa = {};
++      sa.sa_sigaction = &handler;
++      sa.sa_flags = SA_SIGINFO;
++      sigemptyset(&sa.sa_mask);
++      return sa;
++  }();
+   if (sigaction(SIGBUS, &action, &mOldSigaction)) {
+     LOG_ALWAYS_FATAL("sigaction(SIGBUS) failed: %d", errno);
+     // not much can be done now
+-- 
+2.50.0
+

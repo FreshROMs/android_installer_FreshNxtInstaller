@@ -1,0 +1,32 @@
+From 307754d32a3de32ae9d051e0435e33230218ae73 Mon Sep 17 00:00:00 2001
+From: Louis Poier <lpoier7@proton.me>
+Date: Mon, 23 Jun 2025 02:03:15 +0200
+Subject: [PATCH] libziparchive: Fix possible value narrowing error
+
+This fixes the following compiler error:
+libs/ziparchive/zip_archive.cc:1373:22: error: non-constant-expression cannot be narrowed from type 'ssize_t' (aka 'long') to 'size_type' (aka 'unsigned long') in initializer list [-Wc++11-narrowing]
+ 1373 |   return {buf.first, ssize_t(buf.second)};
+      |                      ^~~~~~~~~~~~~~~~~~~
+libs/ziparchive/zip_archive.cc:1373:22: note: insert an explicit cast to silence this issue
+ 1373 |   return {buf.first, ssize_t(buf.second)};
+      |                      ^~~~~~~~~~~~~~~~~~~
+      |                      static_cast<size_type>( )
+
+Signed-off-by: Louis Poier <lpoier7@proton.me>
+
+diff --git a/zip_archive.cc b/zip_archive.cc
+index 7680053..01eeba8 100644
+--- a/zip_archive.cc
++++ b/zip_archive.cc
+@@ -1370,7 +1370,7 @@ bool Reader::IsZeroCopy() const {
+ }  // namespace zip_archive
+ 
+ static std::span<uint8_t> bufferToSpan(zip_archive::Writer::Buffer buf) {
+-  return {buf.first, ssize_t(buf.second)};
++  return {buf.first, static_cast<size_t>(buf.second)};
+ }
+ 
+ template <bool OnIncfs>
+-- 
+2.50.0
+
