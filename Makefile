@@ -107,7 +107,10 @@ SOURCES := \
 	libs/ziparchive/zip_writer.cc \
 	libs/ziparchive/incfs_support/signal_handling.cpp \
 \
-	$(wildcard src/edify/*.c) \
+	libs/edify/expr.c \
+	libs/edify/lex.yy.c \
+	libs/edify/parser.c \
+\
 	$(wildcard src/libs/*.c) \
 	$(wildcard src/libs/*.cpp) \
 	$(wildcard src/controls/*.c) \
@@ -136,8 +139,8 @@ INCLUDES := \
 	-Ivendor/googletest/googletest/include \
 	-Ilibs/ziparchive/incfs_support/include \
 	-Ilibs/ziparchive/include \
-	-Iinclude/aroma \
-	-Isrc/edify
+	-Ilibs/edify/include \
+	-Iinclude/aroma
 
 AROMA_VERSION_FLAGS := \
 	-DAROMA_NAME="\"$(AROMA_NAME)\"" \

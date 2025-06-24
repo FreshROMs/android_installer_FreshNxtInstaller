@@ -89,9 +89,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "expr.h"
-#include "yydefs.h"
-#include "parser.h"
+#include <edify/expr.h>
+#include <edify/parser.h>
 
 extern int gLine;
 extern int gColumn;

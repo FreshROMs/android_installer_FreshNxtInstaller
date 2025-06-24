@@ -21,7 +21,7 @@
 #include <stdarg.h>
 #include <unistd.h>
 
-#include "expr.h"
+#include <edify/expr.h>
 
 
 // Functions should:

@@ -17,9 +17,8 @@
 
 #include <string.h>
 
-#include "expr.h"
-#include "yydefs.h"
-#include "parser.h"
+#include <edify/expr.h>
+#include <edify/parser.h>
 
 int gLine = 1;
 int gColumn = 1;

@@ -23,9 +23,9 @@
 
 #include <sys/stat.h>       //-- Filesystem Stats
 #include <ctype.h>          //-- Character Classifier
-#include "../edify/expr.h"  //-- Edify Parser
-#include "../edify/parser.h"
-#include "../edify/lex.yy.h"
+#include <edify/expr.h>  //-- Edify Parser
+#include <edify/parser.h>
+#include <edify/lex.yy.h>
 
 #include <installer/aroma.h>
 
