@@ -397,7 +397,7 @@ void aui_setbg(char * titlev) {
   char title[64];
   snprintf(title, 64, "<@center>%s</@>", titlev);
   aui_redraw();
-  int elmP  = agdp() * 58;
+  int elmP  = agdp() * 55;
   int titW  = ag_txtwidth(title, 2);
   ag_draw(&aui_win_bg, &aui_bg, 0, 0);
   ag_text(&aui_win_bg, titW, (agw() / 2) - (titW / 2), elmP, title, acfg()->titlefg, 1);
@@ -1798,8 +1798,8 @@ Value * AROMA_VIEWBOX(const char * name, State * state, int argc, Expr * argv[])
   int  imgH       = 0;
   int  tifX       = pad + 38;
   int  imgX       = pad + 38;
-  int  tifY       = agdp() * 72;
-  int  imgY       = agdp() * 34;
+  int  tifY       = agdp() * 69;
+  int  imgY       = agdp() * 31;
   
   if (apng_load(&ap, args[2])) {
     imgE  = 1;
@@ -2004,8 +2004,8 @@ Value * AROMA_TEXTBOX(const char * name, State * state, int argc, Expr * argv[])
   int  imgH       = 0;
   int  tifX       = pad + 38;
   int  imgX       = pad + 38;
-  int  tifY       = agdp() * 72;
-  int  imgY       = agdp() * 34;
+  int  tifY       = agdp() * 69;
+  int  imgY       = agdp() * 31;
   
   if (apng_load(&ap, args[2])) {
     imgE  = 1;
@@ -2175,8 +2175,8 @@ Value * AROMA_CHECKOPT(const char * name, State * state, int argc, Expr * argv[]
   int  imgH       = 0;
   int  tifX       = pad + 38;
   int  imgX       = pad + 38;
-  int  tifY       = agdp() * 72;
-  int  imgY       = agdp() * 34;
+  int  tifY       = agdp() * 69;
+  int  imgY       = agdp() * 31;
   
   if (apng_load(&ap, args[2])) {
     imgE  = 1;
@@ -2396,8 +2396,8 @@ Value * AROMA_CHECKBOX(const char * name, State * state, int argc, Expr * argv[]
   int  imgH       = 0;
   int  tifX       = pad + 38;
   int  imgX       = pad + 38;
-  int  tifY       = agdp() * 72;
-  int  imgY       = agdp() * 34;
+  int  tifY       = agdp() * 69;
+  int  imgY       = agdp() * 31;
   
   if (apng_load(&ap, args[2])) {
     imgE  = 1;
@@ -2589,8 +2589,8 @@ Value * AROMA_SELECTBOX(const char * name, State * state, int argc, Expr * argv[
   int  imgH       = 0;
   int  tifX       = pad + 38;
   int  imgX       = pad + 38;
-  int  tifY       = agdp() * 72;
-  int  imgY       = agdp() * 34;
+  int  tifY       = agdp() * 69;
+  int  imgY       = agdp() * 31;
   
   if (apng_load(&ap, args[2])) {
     imgE  = 1;
@@ -2784,8 +2784,8 @@ Value * AROMA_MENUBOX(const char * name, State * state, int argc, Expr * argv[])
   int  imgH       = 0;
   int  tifX       = pad + 38;
   int  imgX       = pad + 38;
-  int  tifY       = agdp() * 72;
-  int  imgY       = agdp() * 34;
+  int  tifY       = agdp() * 69;
+  int  imgY       = agdp() * 31;
   
   if (apng_load(&ap, args[2])) {
     imgE  = 1;
