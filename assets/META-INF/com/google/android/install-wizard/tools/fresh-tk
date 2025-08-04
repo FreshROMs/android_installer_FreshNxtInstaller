@@ -1,398 +1,384 @@
 #!/sbin/sh
 # =========================================
-#         _____              _      
-#        |  ___| __ ___  ___| |__   
-#        | |_ | '__/ _ \/ __| '_ \  
-#        |  _|| | |  __/\__ \ | | | 
-#        |_|  |_|  \___||___/_| |_| 
-#                              
+#         _____              _
+#        |  ___| __ ___  ___| |__
+#        | |_ | '__/ _ \/ __| '_ \
+#        |  _|| | |  __/\__ \ | | |
+#        |_|  |_|  \___||___/_| |_|
+#
 # =========================================
-# Fresh install toolkit - build 22111901
-# A toolkit used for addon and ROM installation
-# (C) 2019-2022 John Vincent - TenSeventy7@XDA
-# This is licensed under GPLv3
+#
+#  Fresh install toolkit
+#  The Fresh Project
+#  Copyright (C) 2019-2022 John Vincent - TenSeventy7@XDA
+#            (C) 2024-2025 Louis Poier - PeterKnecht93@XDA
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+#  =========================
+#
+# shellcheck disable=SC2174,SC2207,SC3010,SC3012,SC3014,SC3024,SC3030,SC3043,SC3054
 #
 
-EXEC="$@" # function to execute for updater-script. DO NOT EDIT.
-TOOLS='/cache/tools' # the location of the tools used by the installer.
-BUSYBOX="${TOOLS}/busybox" # the location of the busybox binary.
-SVZIP="${TOOLS}/7za" # the location of the 7zip arm binary.
-XMLSTARLET="${TOOLS}/xmlstarlet" # the location of the xmlstarlet arm binary.
-PROP="/tmp/toolkit.prop" # prop file used to counter-check values for the script
-FLASH='/tmp/fresh.prop' # ROM prop file used for version checking
-INSTALL_WIZARD_PATH="/tmp/install-wizard" # Path of the install wizard
+# [
+EXEC="$*" #-- Function to execute for the installer. DO NOT EDIT.
+BUSYBOX="/tmp/fresh/tools/busybox" #-- Location of the busybox binary
 
-export PATH="${TOOLS}:${PATH}"
-file_getprop() { grep "^$2=" "$1" | cut -d= -f2-; }
+FRESH_PATH="/system_root/system/system_ext/etc/fresh" #-- Path of the Fresh directory
+INSTALL_WIZARD_PATH="/tmp/install-wizard" #-- Path of the install wizard
+OVERLAY_PATH="/omr/my_bigball" #-- Path of the overlay directory
 
-# Variables used throughout the script
-DEVICE=$(file_getprop /tmp/vendor.prop 'ro.fresh.device.product') # device-checking prop
-SYSMOUNT=$(file_getprop "${PROP}" 'block.system.mount') # check if the system is mounted as SaR
-SYSMOUNT_PATH=$(file_getprop "${PROP}" 'block.system.mount.path') # check if the system is mounted as SaR
+TOOLKIT_PROP="/tmp/fresh/toolkit.prop" #-- Location of the generated prop file used by the installer
+PACKAGE_PROP="/tmp/fresh/package.prop" #-- Location of the prop file from the installation package
+FRESH_PROP="/system_root/system/system_ext/etc/fresh.prop" #-- Location of the prop file from the currently installed ROM
+# ]
 
-ROM="${SYSMOUNT_PATH}/system_ext/etc/fresh.prop"
-ROM_THREE="${SYSMOUNT_PATH}/system_ext/fresh.prop"
-ROM_THREE_ALT="${SYSMOUNT_PATH}/fresh.prop"
-FRESH="${SYSMOUNT_PATH}/system_ext/etc/fresh"
-DEVICE_PROP="${SYSMOUNT_PATH}/build.prop"
+##
+## file_getprop()
+##
+## Description:
+## - Retrieve a property value from the specified file.
+##
+## Usage:
+## - file_getprop <file> <prop>
+##
+file_getprop() {
+	local file prop
+	file="${1}"; prop="${2}"
+	[ $# -lt 2 ] && return 1
 
-SHRP_DIR="${SYSMOUNT_PATH}/etc/shrp"
+	grep "^$prop=" "$file" | cut -d= -f2-
+}
 
-FLOATING_FEATURE_SYSTEM="${SYSMOUNT_PATH}/etc/floating_feature.xml"
-FLOATING_FEATURE_VENDOR="/vendor/etc/floating_feature.xml"
-
-# Variables used by the addon and OMC backup services
-INSTALLED_OMC='/product/omc/sales_code.dat'
-INSTALLED_OMC_LIST='/product/omc/sales_code_list.dat'
-INSTALLED_OMC_CONFIG='/product/omc/SW_Configuration.xml'
-BACKUP_FOLDER='/data/fresh/'
-BACKUP_OMC_FOLDER="${BACKUP_FOLDER}/omc"
-BACKUP_SHRP_FOLDER="${BACKUP_FOLDER}/shrp"
-HUB_PACKAGE='io.tenseventyseven.fresh'
-
+##
+## file_setprop()
+##
+## Description:
+## - Set or remove a property in the specified file.
+##
+## Usage:
+## - file_setprop <file> <prop> <value>
+## - file_setprop <file> <prop> --delete
+##
 file_setprop() {
-	# Pass props used during installation
-	if [ -e "${BUSYBOX}" ]; then
-		if [ ! -e "${PROP}" ]; then
-			${BUSYBOX} touch "${PROP}" # make the prop file if toolkit could not find it
-			${BUSYBOX} echo "${1}=${2}" > "${PROP}"
-		else
-			${BUSYBOX} echo "${1}=${2}" >> "${PROP}"
-		fi
+	local file prop value
+	file="${1}"; prop="${2}"; value="${3}"
+	[ $# -lt 3 ] && return 1
+
+	if [[ $value == --delete ]]; then
+		#-- Delete property
+		sed -i "/$prop=/d" "$file"
+	elif [ -f "$file" ] && grep -q "$prop" "$file"; then
+		#-- Change property value
+		sed -i "/$prop/c\\$prop=$value" "$file"
 	else
-		if [ ! -e "${PROP}" ]; then
-			touch "${PROP}" # make the prop file if toolkit could not find it
-			echo "${1}=${2}" > "${PROP}"
-		else
-			echo "${1}=${2}" >> "${PROP}"
-		fi
+		#-- Add property
+		! grep -q '# end of file' "$file" && echo "# end of file" >> "$file"
+		sed -i "/# end of file/i $prop=$value" "$file"
 	fi
+
+	return 0
 }
 
-floating() {
-	if [ "$(echo "${1}" | tr '[A-Z]' '[a-z]')" == "rem" ]; then
-		${XMLSTARLET} edit -L -S -d "//SecFloatingFeatureSet/$2" ${FLOATING_FEATURE_SYSTEM}
-		${XMLSTARLET} edit -L -S -d "//SecFloatingFeatureSet/$2" ${FLOATING_FEATURE_VENDOR}
-	elif [ "$(echo "${1}" | tr '[A-Z]' '[a-z]')" == "set" ]; then
-		${XMLSTARLET} edit -L -S -d "//SecFloatingFeatureSet/$2" ${FLOATING_FEATURE_SYSTEM}
-		${XMLSTARLET} edit -L -S -d "//SecFloatingFeatureSet/$2" ${FLOATING_FEATURE_VENDOR}
-		${XMLSTARLET} edit -L -S -s "//SecFloatingFeatureSet" -t elem -n "$2" -v "$3" ${FLOATING_FEATURE_SYSTEM}
-		${XMLSTARLET} edit -L -S -s "//SecFloatingFeatureSet" -t elem -n "$2" -v "$3" ${FLOATING_FEATURE_VENDOR}
-	elif [ "$(echo "${1}" | tr '[A-Z]' '[a-z]')" == "get" ]; then
-		${XMLSTARLET} select -t -m "//SecFloatingFeatureSet" -v "$2" ${FLOATING_FEATURE_SYSTEM}
-		${XMLSTARLET} select -t -m "//SecFloatingFeatureSet" -v "$2" ${FLOATING_FEATURE_VENDOR}
-	fi
+##
+## device_check()
+##
+## Description:
+## - Check if the bootloader version contains any
+##   of the supported model numbers.
+##
+## Usage:
+## - device_check
+##
+device_check() {
+    local supported model
+    supported=($(file_getprop "$PACKAGE_PROP" 'pkg.models'))
+
+    for model in "${supported[@]}"; do
+		if [[ SM-$(getprop 'ro.boot.bootloader') == "$model"* ]]; then
+			#-- Model matched bootloader version, break the loop and return
+            file_setprop "$TOOLKIT_PROP" 'device.model' "$model"
+            break
+        else
+			#-- Model did not match bootloader version, continue with next model
+            file_setprop "$TOOLKIT_PROP" 'device.model' 'fail'
+        fi
+    done
+
+	return 0
 }
 
-optics() {
-	if [ "$(echo "${1}" | tr '[A-Z]' '[a-z]')" == "backup" ]; then
-		mkdir -p ${BACKUP_OMC_FOLDER}
-		cp -f ${INSTALLED_OMC} "/tmp/sales_code.dat"
-		cp -f ${INSTALLED_OMC_LIST} "/tmp/sales_code_list.dat"
-		cp -f ${INSTALLED_OMC_CONFIG} "/tmp/SW_Configuration.xml"
-		${BUSYBOX} cp -rfp --parents "/product/omc" "${BACKUP_OMC_FOLDER}/"
-	elif [ "$(echo "${1}" | tr '[A-Z]' '[a-z]')" == "restore" ]; then
-		cp -rn --preserve=mode,ownership,timestamps,context "${BACKUP_OMC_FOLDER}/product/omc" "/product/"
-		cp -f /tmp/SW_Configuration.xml ${INSTALLED_OMC_CONFIG}
-		cp -f /tmp/sales_code_list.dat ${INSTALLED_OMC_LIST}
-		cp -f /tmp/sales_code.dat ${INSTALLED_OMC}
-	elif [ "$(echo "${1}" | tr '[A-Z]' '[a-z]')" == "check" ]; then
-		INSTALLED_OMC_CODE=$(cat /tmp/sales_code.dat | tr -d '\n')
+##
+## part_check()
+##
+## Description:
+## - Scan for the required partitions and 
+##   add them to the toolkit prop.
+##
+## Usage:
+## - part_check
+##
+part_check() {
+	local IS_WIZARD_INSTALL partitions partition blockpath
+	IS_WIZARD_INSTALL=$(file_getprop "$PACKAGE_PROP" 'install.use_wizard')
+	partitions="system vendor product odm prism optics boot recovery up_param dtb dtbo init_boot vendor_boot system_dlkm vendor_dlkm"
 
-		if [ -z "${INSTALLED_OMC_CODE}" ]; then
-			file_setprop "product.omc.support" "missing"
-		elif [ -d "/product/omc/${INSTALLED_OMC_CODE}" -o -d "/product/omc/single/${INSTALLED_OMC_CODE}" ]; then
-			file_setprop "product.omc.support" "true"
-		else
-			file_setprop "product.omc.support" "false"
-		fi
-	fi
-}
+	#-- Require OMR partition on wizard installs
+	$IS_WIZARD_INSTALL && partitions+=" omr"
 
-fresh_shrp() {
-	if [ "$(echo "${1}" | tr '[A-Z]' '[a-z]')" == "backup" ]; then
-		mkdir -p ${BACKUP_SHRP_FOLDER}
-		cp -rf ${SHRP_DIR} "${BACKUP_FOLDER}"
-	elif [ "$(echo "${1}" | tr '[A-Z]' '[a-z]')" == "restore" ]; then
-		cp -rn --preserve=mode,ownership,timestamps,context "${BACKUP_SHRP_FOLDER}" "${SYSMOUNT_PATH}/etc/"
-	fi
-}
+	for partition in $partitions; do
+		if [[ $(file_getprop "$PACKAGE_PROP" "pkg.has_$partition") == true ]] || [[ $partition == omr ]]; then
+			blockpath=$($BUSYBOX find '/dev/block' -iname "$partition" -print -quit 2>/dev/null)
 
-propscan() {
-	MAGISK_PROPS="false"
-
-	for MODULE in CTS_Module Module_CTS fixprops MagiskHidePropsConf MAGNETAR fdeai 'FDE.AI' 'RTKS' 'GoogleSpoofForWear' 'googlephotos' 'BulletAimGyro' 'Godspeed' 'Godspeedai' '2022GSM' 'GAMESpeed' 'smext' 'Sailfish_Prop'; do
-		if [ -d "/data/adb/modules/${MODULE}" ]; then
-			if [ ! -f "/data/adb/modules/${MODULE}/disable" ]; then
-			    touch /data/adb/modules/${MODULE}/disable
-			    MAGISK_PROPS="true"
-			fi
-		fi
-	done
-
-	file_setprop "magisk.installed.props" "${MAGISK_PROPS}"
-}
-
-addon_remove() {
-	ADDON_REPO="/cache/fresh/repository"
-	ADDON_FILE_LIST="${ADDON_REPO}/${1}.repo"
-	ADDON_FILES=$(awk '{print}' "${ADDON_FILE_LIST}" | sed -e 's@'/system'@'${SYSMOUNT_PATH}'@g' | tr '\n' ' ')
-
-	rm -rf ${ADDON_FILES}
-}
-
-data_check() {
-	# Check if there is existing data. We need this so we can do smart choices
-	# on whether we can overwrite OMC or not since it causes bootloops on some cases
-	if [ -d "/data/data" -a -d "/data/user" -a -d "/data/system" ]; then
-		file_setprop "system.exist.data" "true"
-	else
-		file_setprop "system.exist.data" "false"
-	fi
-}
-
-install_selections() {
-	mkdir -p "${FRESH}/overrides/install-wizard"
-	cp -f "${INSTALL_WIZARD_PATH}/google.prop" "${FRESH}/overrides/install-wizard/google.prop"
-	cp -f "${INSTALL_WIZARD_PATH}/bixby.prop" "${FRESH}/overrides/install-wizard/bixby.prop"
-	cp -f "${INSTALL_WIZARD_PATH}/seamless.prop" "${FRESH}/overrides/install-wizard/seamless.prop"
-	cp -f "${INSTALL_WIZARD_PATH}/ar-zone.prop" "${FRESH}/overrides/install-wizard/ar-zone.prop"
-	cp -f "${INSTALL_WIZARD_PATH}/game-home.prop" "${FRESH}/overrides/install-wizard/game-home.prop"
-	cp -f "${INSTALL_WIZARD_PATH}/security.prop" "${FRESH}/overrides/install-wizard/security.prop"
-	cp -f "${INSTALL_WIZARD_PATH}/extras.prop" "${FRESH}/overrides/install-wizard/extras.prop"
-}
-
-migrate_fresh_three_addons() {
-	FRESH_ADDONS_OLD="${SYSMOUNT_PATH}/etc/fresh/addons" # addon metadata folder used in the ROM
-
-	if [[ ! -d "${FRESH_ADDONS_OLD}" ]]; then
-		FRESH_ADDONS_OLD="${SYSMOUNT_PATH}/system_ext/etc/fresh/addons"
-	fi
-
-	if [ -e "${FRESH_ADDONS_OLD}/io.tns.fresh.bixby.voice.prop" ]; then
-		file_setprop "${INSTALL_WIZARD_PATH}/bixby.prop" 'item.0.1' '1'
-	else
-		file_setprop "${INSTALL_WIZARD_PATH}/bixby.prop" 'item.0.1' '0'
-	fi
-
-	if [ -e "${FRESH_ADDONS_OLD}/io.tns.fresh.bixby.vision.prop" ]; then
-		file_setprop "${INSTALL_WIZARD_PATH}/bixby.prop" 'item.0.2' '1'
-	else
-		file_setprop "${INSTALL_WIZARD_PATH}/bixby.prop" 'item.0.2' '0'
-	fi
-
-	if [ -e "${FRESH_ADDONS_OLD}/io.tns.fresh.bixby.smart.prop" ]; then
-		file_setprop "${INSTALL_WIZARD_PATH}/bixby.prop" 'item.0.3' '1'
-		file_setprop "${INSTALL_WIZARD_PATH}/bixby.prop" 'item.0.4' '1'
-	else
-		file_setprop "${INSTALL_WIZARD_PATH}/bixby.prop" 'item.0.3' '0'
-		file_setprop "${INSTALL_WIZARD_PATH}/bixby.prop" 'item.0.4' '0'
-	fi
-
-	if [ -e "${FRESH_ADDONS_OLD}/io.tns.fresh.gplus.prop" ]; then
-		file_setprop "${INSTALL_WIZARD_PATH}/google.prop" 'selected.0' '1'
-	else
-		file_setprop "${INSTALL_WIZARD_PATH}/google.prop" 'selected.0' '2'
-	fi
-
-	if [ -e "${FRESH_ADDONS_OLD}/io.tns.fresh.sm.mygalaxy.prop" ]; then
-		file_setprop "${INSTALL_WIZARD_PATH}/extras.prop" 'item.0.1' '1'
-		file_setprop "${INSTALL_WIZARD_PATH}/extras.prop" 'item.0.2' '1'
-		file_setprop "${INSTALL_WIZARD_PATH}/security.prop" 'item.0.4' '1'
-	else
-		file_setprop "${INSTALL_WIZARD_PATH}/extras.prop" 'item.0.1' '0'
-		file_setprop "${INSTALL_WIZARD_PATH}/extras.prop" 'item.0.2' '0'
-		file_setprop "${INSTALL_WIZARD_PATH}/security.prop" 'item.0.4' '0'
-	fi
-
-	if [ -e "${FRESH_ADDONS_OLD}/io.tns.fresh.gamehome.prop" ]; then
-		file_setprop "${INSTALL_WIZARD_PATH}/game-home.prop" 'item.0.1' '1'
-	else
-		file_setprop "${INSTALL_WIZARD_PATH}/game-home.prop" 'item.0.1' '0'
-	fi
-
-	if [ -e "${FRESH_ADDONS_OLD}/io.tns.fresh.samsung.live.prop" ]; then
-		file_setprop "${INSTALL_WIZARD_PATH}/seamless.prop" 'item.0.1' '1'
-	else
-		file_setprop "${INSTALL_WIZARD_PATH}/seamless.prop" 'item.0.1' '0'
-	fi
-
-	if [ -e "${FRESH_ADDONS_OLD}/io.tns.fresh.mdec.prop" ]; then
-		file_setprop "${INSTALL_WIZARD_PATH}/seamless.prop" 'item.0.2' '1'
-		file_setprop "${INSTALL_WIZARD_PATH}/seamless.prop" 'item.0.3' '1'
-	else
-		file_setprop "${INSTALL_WIZARD_PATH}/seamless.prop" 'item.0.2' '0'
-		file_setprop "${INSTALL_WIZARD_PATH}/seamless.prop" 'item.0.3' '0'
-	fi
-
-	# Migrate AR Zone for Fresh 3.4P
-	if [ -e "${ROM_THREE}" ]; then
-		if [ -e "${FRESH_ADDONS_OLD}/io.tns.fresh.ar.zone.prop" ]; then
-			file_setprop "${INSTALL_WIZARD_PATH}/ar-zone.prop" 'item.0.1' '1'
-			file_setprop "${INSTALL_WIZARD_PATH}/ar-zone.prop" 'item.0.2' '1'
-			file_setprop "${INSTALL_WIZARD_PATH}/ar-zone.prop" 'item.0.3' '1'
-			file_setprop "${INSTALL_WIZARD_PATH}/ar-zone.prop" 'item.0.4' '1'
-		else
-			file_setprop "${INSTALL_WIZARD_PATH}/ar-zone.prop" 'item.0.1' '0'
-			file_setprop "${INSTALL_WIZARD_PATH}/ar-zone.prop" 'item.0.2' '0'
-			file_setprop "${INSTALL_WIZARD_PATH}/ar-zone.prop" 'item.0.3' '0'
-			file_setprop "${INSTALL_WIZARD_PATH}/ar-zone.prop" 'item.0.4' '0'
-		fi
-	fi
-
-	# Remove 'Private Share' on migrating installations 
-	file_setprop "${INSTALL_WIZARD_PATH}/security.prop" 'item.0.3' '0'
-}
-
-install_rom_check() {
-	ROM_EXIST_INSTALL="false"
-	ROM_EXIST_INSTALL_FOUR="false"
-	ROM_EXIST_INSTALL_THREE="false"
-
-	# Check for an existing ROM installation
-	if [ -e "${ROM}" ]; then
-		ROM_EXIST_VERSION=$(file_getprop "${ROM}" 'ro.fresh.build.date.utc')
-		ROM_OTA_VERSION=$(file_getprop "${FLASH}" 'ro.fresh.build.date.utc')
-		
-		ROM_EXIST_INSTALL="true"
-
-		# Check if Fresh installation is an upgrade
-		if [ "${ROM_EXIST_VERSION}" -lt "${ROM_OTA_VERSION}" ]; then
-			ROM_EXIST_INSTALL="upgrade"
-		fi
-			
-		# Copy current install overrides
-		if [ -d "${FRESH}/overrides/install-wizard" ]; then
-			cp -rf ${FRESH}/overrides/install-wizard /tmp/
-			ROM_EXIST_INSTALL_FOUR="true"
-		fi
-	fi
-
-	# Migrate Fresh 3 addons to new selections
-	if [ -e "${ROM_THREE}" -o -e "${ROM_THREE_ALT}" ]; then
-		ROM_EXIST_INSTALL="upgrade"
-		# Migrate addons to new selections
-		ROM_EXIST_INSTALL_THREE="true"
-	fi
-
-	file_setprop "system.exist.rom" "${ROM_EXIST_INSTALL}"
-	file_setprop "system.exist.rom.four" "${ROM_EXIST_INSTALL_FOUR}"
-	file_setprop "system.exist.rom.three" "${ROM_EXIST_INSTALL_THREE}"
-}
-
-install_ota_check() {
-	ROM_OTA_PROP="/tmp/fresh_upgrade.prop"
-	ROM_EXIST_INSTALL="false"
-
-	if [ -e "${ROM}" ]; then
-		# Check for the version installed in the system
-		ROM_EXIST_VERSION=$(file_getprop "${ROM}" 'ro.fresh.build.date.utc')
-		ROM_OTA_VERSION=$(file_getprop "${ROM_OTA_PROP}" 'ro.fresh.build.date.utc')
-
-		file_setprop "system.exist.version" "${ROM_EXIST_VERSION}"
-
-		if [ "${ROM_EXIST_VERSION}" -ge "${ROM_OTA_VERSION}" ]; then
-			ROM_EXIST_INSTALL="upgrade"
-			cp -f "${DEVICE_PROP}" "/tmp/vendor.prop"
-		else
-			ROM_EXIST_INSTALL="downgrade"
-		fi
-	fi
-
-	file_setprop "system.exist.rom" "${ROM_EXIST_INSTALL}"
-}
-
-install_cleanup() {
-	if [ -d "${BACKUP_FOLDER}" ]; then
-		rm -rf "${BACKUP_FOLDER}"
-	fi
-
-	rm -f '/tmp/fresh-tk_install'
-	rm -rf '/tmp/scripts'
-}
-
-mounts_checker() {
-	# Check for device mounting points.
-	# Based on SuperR@XDA's configure.sh
-	# Extended by TenSeventy7
-
-	# Since mount checker always runs first on script, delete older install props
-	# so we don't skew the script
-	rm -f "${PROP}"
-
-	# Get boot slot if it exists
-	BOOT_SLOT=$(getprop ro.boot.slot_suffix)
-	if [ -z ${BOOT_SLOT} ]; then
-		BOOT_SLOT=_$(getprop ro.boot.slot)
-		if [ "${BOOT_SLOT}" = "_" ]; then
-			BOOT_SLOT=
-		fi
-	fi
-	if [ -z ${BOOT_SLOT} ]; then
-		BOOT_SLOT=$(cat /proc/cmdline 2>/dev/null | tr ' ' '\n' | grep slot | grep -v simslot | cut -d'=' -f2)
-	fi
-	if [ -n ${BOOT_SLOT} ]; then
-		if [ "${BOOT_SLOT}" = "_a" ] || [ "${BOOT_SLOT}" = "_b" ]; then
-			file_setprop "boot.slot" "${BOOT_SLOT}"
-		else
-			BOOT_SLOT=
-		fi
-	fi
-
-	# Get system partition and by-name paths
-	SYSTEMBLOCK=$(find /dev/block | grep -i "system${BOOT_SLOT}" | head -n 1)
-	if [ -z ${SYSTEMBLOCK} ]; then
-		for PARTITION in /etc/*fstab*; do
-			SYSTEMBLOCK=$(grep -v '#' ${PARTITION} | grep -E '/system[^a-zA-Z]' | grep -v system_image | grep -v mmcblk | grep -oE '/dev/[a-zA-Z0-9_./-]*')
-			if [ -n ${SYSTEMBLOCK} ]; then
+			if [ -e "$blockpath" ]; then
+				#-- Partition was found, continue with next partition
+				file_setprop "$TOOLKIT_PROP" "part.block.$partition" "$blockpath"
+			else
+				#-- Partition was not found, break the loop and return
+				file_setprop "$TOOLKIT_PROP" 'part.check' 'fail'
 				break
 			fi
-		done
-	fi
-
-	if [ -n ${SYSTEMBLOCK} ] && [ $(readlink -f "${SYSTEMBLOCK}") ]; then
-		PART_PATH=$(dirname "${SYSTEMBLOCK}")
-		file_setprop "boot.part.by-name" "${PART_PATH}"
-	else
-		file_setprop "boot.part.by-name" "fail"
-		exit 1
-	fi
-
-	# Check for System-as-Root (SaR) mount point
-	if [ -d /system_root ]; then
-		file_setprop "block.system.mount" "/system_root"
-		file_setprop "block.system.mount.path" "/system_root/system"
-	else
-		file_setprop "block.system.mount" "/system"
-		file_setprop "block.system.mount.path" "/system"
-	fi
-
-	# Add verified partitions to installer prop
-	for PARTITION in super; do
-		if [ $(readlink "${PART_PATH}/${PARTITION}${BOOT_SLOT}") ]; then
-			file_setprop "block.super" "${PART_PATH}/${PARTITION}${BOOT_SLOT}"
-			file_setprop "block.dynamic.mount" "true"
-			break
-		else
-			file_setprop "block.dynamic.mount" "false"
-			break
 		fi
 	done
 
-	# Scan for the following partitions and add them to the prop
-	for PARTITION in system vendor product up_param boot dtb recovery; do
-		if [ $(readlink "${PART_PATH}/${PARTITION}${BOOT_SLOT}") ]; then
-			file_setprop "block.$(echo "${PARTITION}" | tr '[A-Z]' '[a-z]')" "${PART_PATH}/${PARTITION}${BOOT_SLOT}"
+	return 0
+}
+
+##
+## version_check()
+##
+## Description:
+## - Check for an existing ROM installation.
+## - Downgrades are considered a new installation.
+## - Optionally specify a build version that the device
+##   is expected to run.
+##
+## Usage:
+## - version_check [expected version]
+##
+version_check() {
+	local IS_WIZARD_INSTALL pkg_version fresh_version expected_version install_type
+	IS_WIZARD_INSTALL=$(file_getprop "$PACKAGE_PROP" 'install.use_wizard')
+	pkg_version=$(file_getprop "$PACKAGE_PROP" 'fresh.build.version')
+	fresh_version=$(file_getprop "$FRESH_PROP" 'ro.fresh.build.version')
+	expected_version=${1}
+
+	#-- Probe for expected version if specified
+	if [ -n "$expected_version" ]; then
+		if [[ $expected_version == "$fresh_version" ]]; then
+			#-- Version requirement met
+			file_setprop "$TOOLKIT_PROP" 'install.eligible' 'true'
 		else
-			file_setprop "block.$(echo "${PARTITION}" | tr '[A-Z]' '[a-z]')" "fail"
+			#-- Version requirement not met
+			file_setprop "$TOOLKIT_PROP" 'install.eligible' 'false'
 		fi
+	fi
+
+	#-- Check installation type
+	if $IS_WIZARD_INSTALL && ! [[ -d "$OVERLAY_PATH" || -d "$FRESH_PATH/overrides" ]]; then
+		#-- Installing a wizard package but no addons were found, consider this a new install
+		install_type="new"
+	elif [[ $pkg_version == "$fresh_version" ]]; then
+		#-- Package version and installed version match, user is re-installing
+		install_type="reinstall"
+	elif [[ $pkg_version > $fresh_version ]]; then
+		#-- Package version is newer than installed version, user is upgrading
+		install_type="upgrade"
+	else
+		#-- Package version neither matches nor is newer than installed version, user is new or downgrading
+		install_type="new"
+	fi
+
+	file_setprop "$TOOLKIT_PROP" 'install.type' "$install_type"
+	return 0
+}
+
+##
+## calc_install_progress()
+##
+## Description:
+## - Calculate the system install progress value
+##   based on the partitions shipped with the package.
+##
+## Usage:
+## - calc_install_progress
+##
+calc_install_progress() {
+	local partitions progress partition
+	partitions="super_empty system vendor product odm prism optics boot recovery up_param dtb dtbo init_boot vendor_boot system_dlkm vendor_dlkm"
+	progress=0.95
+
+	for partition in $partitions; do
+		if [[ $(file_getprop "$PACKAGE_PROP" "pkg.has_$partition") == true ]]; then
+			case "$partition" in
+			super_empty|vendor|product) progress=$(echo "$progress 0.1 -p" | $BUSYBOX dc) ;;
+			odm|prism)                  progress=$(echo "$progress 0.025 -p" | $BUSYBOX dc) ;;
+			*)                          progress=$(echo "$progress 0.01 -p" | $BUSYBOX dc) ;;
+			esac
+		fi
+	done
+
+	file_setprop "$TOOLKIT_PROP" 'part.progress.system' "$progress"
+
+	return 0
+}
+
+##
+## migrate_addon_list()
+##
+## Description:
+## - Migrates addon selections from a previous Fresh installation.
+##
+## Usage:
+## - migrate_addon_list
+##
+migrate_addon_list() {
+	#-- Google
+	if [ -f  "$OVERLAY_PATH/fresh/install-wizard/google.prop" ]; then
+		cp -a -f "$OVERLAY_PATH/fresh/install-wizard/google.prop" "$INSTALL_WIZARD_PATH/google.prop"
+	else
+		cp -a -f "$FRESH_PATH/overrides/install-wizard/google.prop" "$INSTALL_WIZARD_PATH/google.prop"
+	fi
+
+	#-- Bixby
+	if [ -f  "$OVERLAY_PATH/fresh/install-wizard/bixby.prop" ]; then
+		cp -a -f "$OVERLAY_PATH/fresh/install-wizard/bixby.prop" "$INSTALL_WIZARD_PATH/bixby.prop"
+	else
+		file_setprop "$INSTALL_WIZARD_PATH/bixby.prop" 'item.0.1' "$(file_getprop "$FRESH_PATH/overrides/install-wizard/bixby.prop" 'item.0.1')" #-- Bixby Voice
+		file_setprop "$INSTALL_WIZARD_PATH/bixby.prop" 'item.0.2' "$(file_getprop "$FRESH_PATH/overrides/install-wizard/bixby.prop" 'item.0.2')" #-- Bixby Vision
+	fi
+
+	#-- Seamless
+	if [ -f  "$OVERLAY_PATH/fresh/install-wizard/seamless.prop" ]; then
+		cp -a -f "$OVERLAY_PATH/fresh/install-wizard/seamless.prop" "$INSTALL_WIZARD_PATH/seamless.prop"
+	else
+		file_setprop "$INSTALL_WIZARD_PATH/seamless.prop" 'item.0.1' "$(file_getprop "$FRESH_PATH/overrides/install-wizard/seamless.prop" 'item.0.2')" #-- Link To Windows
+		file_setprop "$INSTALL_WIZARD_PATH/seamless.prop" 'item.0.2' '0'                                                                               #-- Camera Sharing
+		file_setprop "$INSTALL_WIZARD_PATH/seamless.prop" 'item.0.3' "$(file_getprop "$FRESH_PATH/overrides/install-wizard/seamless.prop" 'item.0.3')" #-- Call & Text on other devices
+	fi
+
+	#-- Security
+	if [ -f  "$OVERLAY_PATH/fresh/install-wizard/security.prop" ]; then
+		cp -a -f "$OVERLAY_PATH/fresh/install-wizard/security.prop" "$INSTALL_WIZARD_PATH/security.prop"
+	else
+		file_setprop "$INSTALL_WIZARD_PATH/security.prop" 'item.0.1' "$(file_getprop "$FRESH_PATH/overrides/install-wizard/security.prop" 'item.0.4')" #-- Checkout
+		file_setprop "$INSTALL_WIZARD_PATH/security.prop" 'item.0.2' "$(file_getprop "$FRESH_PATH/overrides/install-wizard/security.prop" 'item.0.2')" #-- Secure Folder
+		file_setprop "$INSTALL_WIZARD_PATH/security.prop" 'item.0.3' '0'                                                                               #-- Secure Wi-Fi
+		file_setprop "$INSTALL_WIZARD_PATH/security.prop" 'item.0.4' '0'                                                                               #-- Auto Blocker
+	fi
+
+	#-- AR Zone
+	if [ -f  "$OVERLAY_PATH/fresh/install-wizard/ar_zone.prop" ]; then
+		cp -a -f "$OVERLAY_PATH/fresh/install-wizard/ar_zone.prop" "$INSTALL_WIZARD_PATH/ar_zone.prop"
+	else
+		file_setprop "$INSTALL_WIZARD_PATH/ar_zone.prop" 'item.0.1' "$(file_getprop "$FRESH_PATH/overrides/install-wizard/ar-zone.prop" 'item.0.2')" #-- AR Emoji
+		file_setprop "$INSTALL_WIZARD_PATH/ar_zone.prop" 'item.0.2' "$(file_getprop "$FRESH_PATH/overrides/install-wizard/ar-zone.prop" 'item.0.3')" #-- AR Doodle
+		file_setprop "$INSTALL_WIZARD_PATH/ar_zone.prop" 'item.0.3' "$(file_getprop "$FRESH_PATH/overrides/install-wizard/ar-zone.prop" 'item.0.4')" #-- DecoPic
+	fi
+
+	#-- Galaxy AI
+	if [ -f  "$OVERLAY_PATH/fresh/install-wizard/gai.prop" ]; then
+		cp -a -f "$OVERLAY_PATH/fresh/install-wizard/gai.prop" "$INSTALL_WIZARD_PATH/gai.prop"
+	else
+		file_setprop "$INSTALL_WIZARD_PATH/gai.prop" 'item.0.1' '1' #-- AI Wallpaper
+		file_setprop "$INSTALL_WIZARD_PATH/gai.prop" 'item.0.2' '1' #-- Call Assistant
+		file_setprop "$INSTALL_WIZARD_PATH/gai.prop" 'item.0.3' '1' #-- Interpreter
+	fi
+
+	#-- Misc
+	if [ -f  "$OVERLAY_PATH/fresh/install-wizard/misc.prop" ]; then
+		cp -a -f "$OVERLAY_PATH/fresh/install-wizard/misc.prop" "$INSTALL_WIZARD_PATH/misc.prop"
+	else
+		file_setprop "$INSTALL_WIZARD_PATH/misc.prop" 'item.0.1' '1'                                                                                #-- Samsung DeX
+		file_setprop "$INSTALL_WIZARD_PATH/misc.prop" 'item.0.2' '1'                                                                                #-- Samsung Find
+		file_setprop "$INSTALL_WIZARD_PATH/misc.prop" 'item.0.3' '1'                                                                                #-- Smart Suggestions
+		file_setprop "$INSTALL_WIZARD_PATH/misc.prop" 'item.0.4' "$(file_getprop "$FRESH_PATH/overrides/install-wizard/game-home.prop" 'item.0.1')" #-- Game Tools
+	fi
+
+	return 0
+}
+
+##
+## export_addon_list()
+##
+## Description:
+## - Export addon selections for future installations.
+##
+## Usage:
+## - export_addon_list
+##
+export_addon_list() {
+	local PROPS
+	PROPS="google.prop bixby.prop seamless.prop security.prop ar_zone.prop gai.prop misc.prop"
+
+	mkdir -p "$OVERLAY_PATH/fresh/install-wizard"
+	for prop in $PROPS; do
+		cp -a -f "$INSTALL_WIZARD_PATH/$prop" "$OVERLAY_PATH/fresh/install-wizard/$prop"
 	done
 }
 
-# Execute the function given by updater-script
-if [ ! -z "${EXEC}" ]; then
-	${EXEC}
+##
+## init_overlay()
+##
+## Description:
+## - Clear any existing addon whiteouts and setup common directories.
+##
+## Usage:
+## - init_overlay
+##
+init_overlay() {
+	rm -rf "$OVERLAY_PATH"
+
+	mkdir -p -m 755 -Z u:object_r:system_file:s0 "$OVERLAY_PATH/system/app"
+	mkdir -p -m 755 -Z u:object_r:system_file:s0 "$OVERLAY_PATH/system/etc"
+	mkdir -p -m 755 -Z u:object_r:system_file:s0 "$OVERLAY_PATH/system/priv-app"
+
+	mkdir -p -m 755 -Z u:object_r:system_file:s0 "$OVERLAY_PATH/product/app"
+	mkdir -p -m 755 -Z u:object_r:system_file:s0 "$OVERLAY_PATH/product/etc"
+	mkdir -p -m 755 -Z u:object_r:system_file:s0 "$OVERLAY_PATH/product/priv-app"
+
+	return 0
+}
+
+##
+## addon_remove()
+##
+## Description:
+## - Generate whiteout files for the given addon.
+##
+## Usage:
+## - addon_remove <repo> <addon>
+##
+addon_remove() {
+	local REPO ADDON REPO_FILES
+	REPO="${1}"; ADDON="${2}"
+	REPO_FILES=($(awk '!/^#/ {  print $0 }' "/tmp/fresh/repository/$REPO/$ADDON.repo"))
+
+	for file in "${REPO_FILES[@]}"; do
+		mkdir -p -m 755 -Z u:object_r:system_file:s0 "$OVERLAY_PATH/$(dirname "$file")"
+		mknod "$OVERLAY_PATH/$file" c 0 0
+	done
+
+	return 0
+}
+
+##
+## Execute the function given by updater-script
+##
+if [ -n "$EXEC" ]; then
+	$EXEC
 else
-	sleep 1	# Sleep then fail
+	sleep 1
 	exit 1
 fi
