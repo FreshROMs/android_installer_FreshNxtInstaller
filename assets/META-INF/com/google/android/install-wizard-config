@@ -1,50 +1,61 @@
-﻿# =========================================
-#         _____              _      
-#        |  ___| __ ___  ___| |__   
-#        | |_ | '__/ _ \/ __| '_ \  
-#        |  _|| | |  __/\__ \ | | | 
-#        |_|  |_|  \___||___/_| |_| 
-#                              
 # =========================================
-#  
+#         _____              _
+#        |  ___| __ ___  ___| |__
+#        | |_ | '__/ _ \/ __| '_ \
+#        |  _|| | |  __/\__ \ | | |
+#        |_|  |_|  \___||___/_| |_|
+#
+# =========================================
+#
 #  Installer Config
 #  Based on AROMA Installer config
 #  The Fresh Project
-#  Copyright (C) 2022 TenSeventy7
-#  
+#  Copyright (C) 2022 John Vincent - TenSeventy7@XDA
+#            (C) 2025 Louis Poier - PeterKnecht93@XDA
+#
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
 #  the Free Software Foundation, either version 3 of the License, or
 #  (at your option) any later version.
-#  
+#
 #  This program is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #  GNU General Public License for more details.
-#  
+#
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
-#  
+#
 #  =========================
+#
 
-# Set colorspace and theme
+###
+# 0 - Prepare installer
+resexec("tools/fresh-tk", "mkdir -p /tmp/fresh/tools");
+restotmp("tools/busybox", "/fresh/tools/busybox");
+restotmp("tools/fresh-tk", "/fresh/tools/fresh-tk");
+ziptotmp("package.prop", "/fresh/package.prop");
+
+#-- Set colorspace and theme
 ini_set("force_colorspace","rgba");
 theme("fresh");
 
-# Show splash screen
-splash(2000, "splash/setup_splash_fresh_four");
+#-- Show splash screen
+splash(2000, "splash/setup_splash_fresh_six");
 
-# Set font styles and font sizes
+#-- Set font styles and font sizes
 fontresload( "0", "ttf/SEC-Regular.ttf;ttf/NotoSansTaiViet-Regular.ttf;ttf/DroidSansFallback.ttf;ttf/DroidSansArabic.ttf;", "12" );
 fontresload( "1", "ttf/SEC-Medium.ttf;ttf/NotoSansTaiViet-Regular.ttf;ttf/DroidSansFallback.ttf;ttf/DroidSansArabic.ttf;", "16" );
 fontresload( "2", "ttf/SEC-Light.ttf;ttf/NotoSansTaiViet-Regular.ttf;ttf/DroidSansFallback.ttf;ttf/DroidSansArabic.ttf;", "18" );
 
-# Load default language before selection
+#-- Load default language before selection
 loadlang("strings/en.lang");
 
-# Load language picker
+###
+# 1 - Language picker
 include("modules/select_language.edify");
 
+###
 # 2 - Welcome screen
 viewbox(
     "<~welcome.title>",
@@ -53,9 +64,10 @@ viewbox(
     "<@center><~welcome.text2></@>\n\n\n\n" +
     "<@center><~welcome.text3></@>",
 
-    "@fresh"
+    "@brand"
 );
 
+###
 # 3 - ToS and privacy policy screen
 agreebox(
     "<~terms.title>",
@@ -66,14 +78,18 @@ agreebox(
     "<~terms.confirm>"
 );
 
-# Scan for a current Fresh installation and check if we can do a re-install
+###
+# 4 - Install menu screen
 pleasewait("<~wait.install.scan>");
-resexec("tools/fresh-tk", "mounts_checker");
-exec("/sbin/mount", file_getprop("/tmp/toolkit.prop", "block.system"), file_getprop("/tmp/toolkit.prop", "block.system.mount"));
-restotmp("fresh.prop", "/fresh.prop");
-resexec("tools/fresh-tk", "install_rom_check");
+resexec("tools/fresh-tk", "part_check");
+resexec("tools/fresh-tk", "mkdir -p /system_root");
+resexec("tools/fresh-tk", "mount -t ext4 " + file_getprop("/tmp/fresh/toolkit.prop", "part.block.system") + " /system_root");
+resexec("tools/fresh-tk", "mount -t erofs " + file_getprop("/tmp/fresh/toolkit.prop", "part.block.system") + " /system_root");
+resexec("tools/fresh-tk", "mkdir -p /omr");
+resexec("tools/fresh-tk", "mount -t ext4 " + file_getprop("/tmp/fresh/toolkit.prop", "part.block.omr") + " /omr");
+resexec("tools/fresh-tk", "version_check");
 
-if file_getprop("/tmp/toolkit.prop", "system.exist.rom") == "false" then
+if file_getprop("/tmp/fresh/toolkit.prop", "install.type") == "new" then
   menubox(
       "<~menu.title>",
       "<~menu.new.summary>",
@@ -84,30 +100,22 @@ if file_getprop("/tmp/toolkit.prop", "system.exist.rom") == "false" then
       "<~menu.custom.title>",       "<~menu.custom.summary>",         "@install_custom"
   );
 
-  # Express installation
+  #-- Express installation
   if prop("menu.prop","selected") == "1" then
     include("modules/install_express.edify");
   endif;
 
-  # Custom installation
+  #-- Custom installation
   if prop("menu.prop","selected") == "2" then
     include("modules/install_custom.edify");
   endif;
 
 else
 
-  # If Fresh 3, migrate addons
-  if file_getprop("/tmp/toolkit.prop", "system.exist.rom.three") == "true" then
-    include("modules/install_express.edify");
-    resexec("tools/fresh-tk", "migrate_fresh_three_addons");
-  endif;
+  #-- Migrate addon selections from the previous installation
+  resexec("tools/fresh-tk", "migrate_addon_list");
 
-  # If Fresh 4 prerelease, set defaults
-  if file_getprop("/tmp/toolkit.prop", "system.exist.rom.four") == "false" then
-    include("modules/install_express.edify");
-  endif;
-
-  if file_getprop("/tmp/toolkit.prop", "system.exist.rom") == "upgrade" then
+  if file_getprop("/tmp/fresh/toolkit.prop", "install.type") == "upgrade" then
     menubox(
         "<~menu.title>",
         "<~menu.current.summary>",
@@ -131,20 +139,20 @@ else
     );
   endif;
 
-  # Express installation
+  #-- Express installation
   if prop("menu.prop","selected") == "2" then
     include("modules/install_express.edify");
   endif;
 
-  # Custom installation
+  #-- Custom installation
   if prop("menu.prop","selected") == "3" then
     include("modules/install_custom.edify");
   endif;
 
 endif;
 
-
-# Show summary of installation
+###
+# 5 - Summary screen
 pleasewait("<~wait.generic>");
 resexec("tools/make-summary");
 
@@ -154,10 +162,12 @@ textbox(
     "<~confirm.title>",
     "<~confirm.summary>",
     "@confirm",
-    read("/tmp/summary.txt")
+    read("/tmp/install-wizard/summary.txt")
 );
 
-ini_set("text_next", "<~install.next>");
+###
+# 6 - Installation screen
+ini_set("text_next", "<~text_next>");
 
 setvar("installstatus",
   install(
@@ -168,7 +178,9 @@ setvar("installstatus",
   )
 );
 
-ini_set("text_next", "<~install.exit>");
+###
+# 7 - Finish screen
+ini_set("text_next", "<~text.exit>");
 
 checkviewbox(
     "<~finish.title>",
@@ -177,13 +189,13 @@ checkviewbox(
     "<@center><~finish.text2></@>\n\n\n\n" +
     "<@center><~finish.text3></@>",
 
-    "@fresh",
+    "@brand",
 
     "<~finish.button.restart>",
     "0",
     "reboot_after_setup"
 );
 
-if getvar("reboot_after_setup")=="1" then
+if getvar("reboot_after_setup") == "1" then
   reboot("onfinish");
 endif;
