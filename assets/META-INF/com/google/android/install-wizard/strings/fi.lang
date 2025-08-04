@@ -1,0 +1,229 @@
+# =========================================
+#         _____              _      
+#        |  ___| __ ___  ___| |__   
+#        | |_ | '__/ _ \/ __| '_ \  
+#        |  _|| | |  __/\__ \ | | | 
+#        |_|  |_|  \___||___/_| |_| 
+#                              
+# =========================================
+#  
+#  Installer Language Resource File
+#  Based on AROMA Installer
+#  The Fresh Project
+#  Copyright (C) 2022 TenSeventy7
+#            (C) 2025 PeterKnecht93
+#  
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#  
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#  
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#  
+#  =========================
+
+#   Language Information
+#
+#   Language             : Finnish
+#   Lang code (ISO-639)  : FI
+#   Localization By      : Finnnishboy
+#
+
+# // Basic installer strings {
+
+text_next=Seuraava
+text_back=Takaisin
+text_ok=OK
+text_yes=Kyllä
+text_no=Ei
+text_about=Lisätietoja
+text_quit=Poistu Freshin käyttöönotosta
+text_quit_msg=Oletko varma että haluat poistua käyttöönotosta? Sinun muutoksiasi ei talleneta.
+text_calibrating=Kalibrointivälineet
+
+text.exit=Poistu
+wait.generic=Odota hetki...
+wait.install.scan=Skannataan laitteelta nykyistä Fresh asennusta.
+
+# } // Basic installer strings
+
+# // Main installer strings {
+
+# Language screen
+lang.title=Tervetuloa!
+lang.summary=Valitse kielesi.
+lang.name=Suomi
+lang.translator=Tämän lokalisoinnin tekijä on Finnnishboy
+
+# Welcome screen
+welcome.title=Tervetuloa Freshiin!
+welcome.text1=Tervetuloa asennusohjelmistoon!
+welcome.text2=Tämä asennusohjelmisto opastaa sinua Freshin asentamisessa laitteellesi ja lisäominaisuuksien hankinnassa juuri niinkuin haluat.
+welcome.text3=Napauta <b>'Seuraava'</b> jatkaaksesi.
+
+# ToS and privacy policy screen
+terms.title=Käyttöehdot
+terms.summary= Freshin käyttöä säätelevät <b>tenseventyseven</b> käyttöehdot.
+terms.check=Hyväksyn
+terms.confirm=Sinun pitää hyväksyä käyttöehdot jatkaaksesi.
+
+# Install menu screen
+menu.title=Tervetuloa asennukseen!
+menu.current.summary=Tervetuloa, vanha käyttäjä! Fresh on jo asennettu laitteelasi.
+menu.new.summary=Tervetuloa, uusi käyttäjä!
+menu.upgrade.title=Päivitä Fresh
+menu.upgrade.summary=Päivitä laitteesi tähän Fresh versioon.
+menu.reinstall.title=Uudelleen asenna Fresh 6
+menu.reinstall.summary=Asenna Fresh uudelleen aiemmasta asennuksesta valitsemillasi asetuksilla.
+menu.express.title=Nopea Asennus
+menu.express.summary=Asenna Fresh käytämällä oletusasetuksia sovelluksille ja palveluille.
+menu.custom.title=Mukautettu Asennus
+menu.custom.summary=Asenna Fresh käyttämällä omia mukautettuja asetuksia sovelluksille ja palveluille.
+
+# Confirmation and summary screen
+confirm.title=Siinä on kaikki mitä tarvitsemme
+confirm.summary=Tarkista että valitut kohteet ovat oikeat sinulle, ja napauta <b>'Asenna nyt'</b> aloittaaksesi asennus.
+confirm.next=Asenna nyt
+
+# Installation screen
+install.title=Asennetaan Fresh 6
+install.summary=Istu alas ja rentoudu, kun Fresh asennetaan laitteelesi. Tämä voi kestää muutaman minuutin.
+install.finish=Fresh on asennettu onnistuneesti. Napauta <b>'Seuraava'</b> lopettaaksesi asennuksen.
+
+# Finish screen
+finish.title=Asennus valmis!
+finish.text1=Fresh on nyt asennettu onnistuneesti laitteelesi, napauta <b>'Seuraava'</b> lopettaaksesi asennuksen.
+finish.text2=Voit nyt valita, että laite käynnistyy automaattisesti uudelleen tämän asennuksen jälkeen, valitsemalla alla olevan valintaruudun. <b>Tervetuloa Freshiin!</b>
+finish.text3=Napauta <b>'Poistu'</b> lopettaaksesi asennuksen.
+finish.button.restart=Käynnisty uudelleen asennuksen jälkeen.
+
+# } // Main installer strings
+
+# // Fresh addon strings {
+
+addon.installed=Asennettu
+addon.notinstalled=Ei asennettu
+
+# Google
+addon.google=Google sovellukset
+addon.google.title=Valitse tasosi Googlen sovelluksia.
+addon.google.summary=Kätevät palvelut, jotka on rakennettu sinua ajatellen.
+addon.google.full.title=Täysi
+addon.google.full.summary=Sisältää kaiken Micro versiossa olevan lisäksi myös Ympyröi ja hae ja Google Meet.
+addon.google.micro.title=Micro
+addon.google.micro.summary=Sisältää kaiken Lite versiossa olevan lisäksi myös Chrome and Android Auto tuen.
+addon.google.lite.title=Lite
+addon.google.lite.summary=Sisältää vain tarvittavat palvelut Google Play kaupalle.
+
+# Bixby
+addon.bixby=Bixby
+addon.bixby.title=Vapauta puhelimesi koko potentiaali
+addon.bixby.summary=Koe älykkäämpi elämä Bixbyn kanssa
+addon.bixby.voice.title=Bixby Voice
+addon.bixby.voice.summary=Bixby vapauttaa sinut keskittymään tärkeimpiin asioihin.
+addon.bixby.vision.title=Bixby Vision
+addon.bixby.vision.summary=Bixby Vision helpottaa ympäröivän maailman oppimista.
+
+# Galaxy Ecosystem
+addon.seamless=Galaxy Ekosysteemi
+addon.seamless.title=Yhdistä laitteesi saumattomasti
+addon.seamless.summary=Koe Galaxy ekosysteemi näiden sovellusten ja palveluiden kanssa.
+addon.seamless.ltw.title=Link to Windows
+addon.seamless.ltw.summary=Link to Windows ottaa kaiken mitä voit tehdä puhelimellasi, ja tue sen tietokoneellesi.
+addon.seamless.camerashare.title=Kameran jako
+addon.seamless.camerashare.summary=Käytä sinun Galaxy puhelinta verkkokamerana Kamera jaon avulla
+addon.seamless.cta.title=Soita ja lähetä tekstiviestejä
+addon.seamless.cta.summary=Soita ja vastaanota puheluita Samsung-tabletillasi.
+
+# Security
+addon.security=Turvallisuus
+addon.security.title=Paranna tietoturvaasi
+addon.security.summary=Pidä Samsung Galaxy laitteesi turvallisena aina.
+addon.security.checkout.title=Samsung Kassa
+addon.security.checkout.summary=Nopea, turvallinen, nopea maksaminen Galaxy Storessa ja Galaxy Themesissa.
+addon.security.folder.title=Secure Folder
+addon.security.folder.summary=Hyödynnä puolustusluokan Samsung Knox turvallisuusalustaa yksityisen tilan luomiseen.
+addon.security.wifi.title=Turvallinen Wi-Fi
+addon.security.wifi.summary=Suojaa sinun Galaxy puhelinta hakkerointiyrityksiltä.
+addon.security.autoblocker.title=Auto Blocker
+addon.security.autoblocker.summary=Suojaa puhelintasi estämällä uhat ja muut epäillyttävät toiminnot
+
+# Augmented Reality
+addon.ar_zone=Lisätty Todellisuus
+addon.ar_zone.title=Pidä enemmän hauskaa kamerasi kanssa
+addon.ar_zone.summary=Ota hauskoja kuvia ja videoita lisätyn todellisuuden kanssa.
+addon.ar_zone.emoji.title=AR Emoji
+addon.ar_zone.emoji.summary=Ota hauskoja kuvia ja videoita emojeilla käyttämällä erilaisia valokuvausmoodeja.
+addon.ar_zone.doodle.title=AR-Piirros
+addon.ar_zone.doodle.summary=AR-Piirros parantaa videoita antamalla sinulle mahdollisuuden lisätä ympäristöösi viivapiirroksia tai käsinkirjoitusta.
+addon.ar_zone.decopic.title=DECO Pic
+addon.ar_zone.decopic.summary=Sarja luovia työkaluja, joilla voi luoda omia hauskoja ja hassuja kuvia.
+
+# Galaxy AI
+addon.gai=Galaxy AI
+addon.gai.title=Elämä aukeaa Galaxy AI:n avulla
+addon.gai.summary=Vapauta luovuutesi, lisää tuottavuutta ja avaa maailma täynnä uusia mahdollisuuksia.
+addon.gai.wallpaper.title=Generatiivinen taustakuva
+addon.gai.wallpaper.summary=Luo personalisoituja taustakuvia koti ja lukitusnäytöillesi.
+addon.gai.livetranslate.title=Live-käännös
+addon.gai.livetranslate.summary=Puhu vain puhelimessa, ja Live-käännös kääntää sanasi reaaliajassa.
+addon.gai.interpreter.title=Bixby-tulkki
+addon.gai.interpreter.summary=Uppoudu sujuviin keskusteluihin Bixby tulkin avulla.
+
+# More Apps
+addon.misc=Lisää sovelluksia
+addon.misc.title=Ota laitteestasi kaikki irti
+addon.misc.summary=Maksimoi sinun Galaxy kokemus.
+addon.misc.dex.title=Samsung DeX
+addon.misc.dex.summary=Yhdistä sinun Galaxy televisioon tai tietokoneeseen ja avaa uusi työpöytämaailma.
+addon.misc.find.title=Etsi laitteeni
+addon.misc.find.summary=Löydä sinun Galaxy puhelin, tabletti, kello ja muut laitteet helposti.
+addon.misc.suggestions.title=Älykkäät ehdotukset
+addon.misc.suggestions.summary=Nauti personalisoiduista suosituksista viesteistä, kalenteritapahtumista ja muita asioita, jotka helpottavat päivääsi
+addon.misc.game.title=Peli Työkalut
+addon.misc.game.summary=Paranna mobiilipelaamista Peli työkaluilla ja Pelin optimointi palvelulla.
+
+# } // Fresh addon strings
+
+# // Installation strings {
+
+script.check.compatibility=Tarkistetaan laitteen yhteensopivuutta
+script.check.device.fail1=Yhteensopimaton laite tunnistettu!
+script.check.device.fail2=Tämä Fresh versio on tehty vain:
+script.check.device.success=Tunnistettu.
+script.check.partitions.fail1=Osioita ei löytynyt!
+script.check.partitions.fail2=Päivitä palautuskuvasi.
+script.check.partitions.success=Osastot löydetty
+
+script.partitions.mount=Mounting partitions.
+script.partitions.remount=Uudelleenkiinitetään osiot.
+script.partitions.unmount=Irrotetaan osiot.
+
+script.install.main=Asennetaan Fresh 6
+script.install.super=Alustetaan super-osio
+script.install.system=Asennetaan Fresh system osio
+script.install.vendor=Asennetaan Fresh vendor osio
+script.install.product=Asennetaan Fresh product osio.
+script.install.odm=Asennetaan Fresh odm osio.
+script.install.prism=Asennetaan Fresh prism osio.
+script.install.optics=Asennetaan Fresh optics osio.
+script.install.boot=Asennetaan räätälöity kernel.
+script.install.recovery=Asennetaan räätälöity recovery.
+script.install.splash=Asennetaan räätälöity OEM-aloitusnäyttö.
+script.install.dtb=Asennetaan device tree blob.
+script.install.dtbo=Asennetaan device tree overlay.
+script.install.init_boot=Asennetaan init_boot osio.
+script.install.vendor_boot=Asennetaan vendor_boot osio.
+script.install.system_dlkm=Asennetaan system_dlkm osio.
+script.install.vendor_dlkm=Asennetaan vendor_dlkm osio.
+script.install.complete=Fresh on nyt asennettu onnistuneesti!
+
+script.housekeeping.addons=Asennetaan valitut lisäosat asennuksesta.
+
+# } // Installation strings

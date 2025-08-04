@@ -1,202 +1,229 @@
 # =========================================
-# _____              _
-# |  ___| __ ___  ___| |__
-# | |_ | '__/ _ \/ __| '_ \
-# |  _|| | |  __/\__ \ | | |
-# |_|  |_|  \___||___/_| |_|
-# 
+#         _____              _      
+#        |  ___| __ ___  ___| |__   
+#        | |_ | '__/ _ \/ __| '_ \  
+#        |  _|| | |  __/\__ \ | | | 
+#        |_|  |_|  \___||___/_| |_| 
+#                              
 # =========================================
-# 
-# Installer Language Resource File
-# Based on AROMA Installer
-# The Fresh Project
-# Copyright (C) 2022 TenSeventy7
-# 
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-# 
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-# 
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <https://www.gnu.org/licenses/>.
-# 
-# =========================
-# Language Information
-# 
-# Language             : English
-# Lang code (ISO-639)  : EN
-# Localization By      : TenSeventy7
-# Replace with your desired username.
-lang.translator=Перевод trigger337 и redoverflow
-# Initial language strings
-lang.title=Здравствуйте!
-lang.summary=Выберите свой язык.
-welcome.title=Добро пожаловать в Fresh!
-welcome.text1=Добро пожаловать в мастер установки!
-welcome.text2=Эта программа поможет вам установить Fresh на ваше устройство и дополнительные функции по вашему выбору.
-welcome.text3=Нажмите <b>'далее'</b> чтобы продолжить.
-terms.title=Условия обслуживания
-terms.summary=Использование Fresh управляется Условиями Обслуживания <b>tenseventyseven</b>.
-terms.check=Я согласен
-terms.confirm=Вы должны согласиться с условиями чтобы продолжить.
-menu.title=Добро пожаловать в установку!
-menu.current.summary=Здвавствуй, старый пользователь! Fresh устанавливается на ваше устройство.
-menu.new.summary=Здвавствуй, новый пользователь!
-menu.reinstall.title=Переустановить Fresh 4
-menu.reinstall.summary=Переустановить Fresh из старой установки с выбранными настройками.
-menu.upgrade.title=Обновить Fresh
-menu.upgrade.summary=Обновить ваше устройство до этой версии Fresh.
-menu.express.title=Быстрая установка
-menu.express.summary=Установить Fresh со стандартными настройками для приложений и сервисов.
-menu.custom.title=Установка с выбором параметров
-menu.custom.summary=Установить Fresh с вашими настройками для приложений и сервисов.
-confirm.title=Это всё, что нам нужно
-confirm.summary=Проверьте ваши настройки и нажмите <b>'далее'</b> для продолжения установки.
-confirm.next=Установить
-install.title=Установка Fresh 4
-install.summary=Установка Fresh займёт некоторое время.
-install.finish=Установка Fresh завершена. Нажмите <b>'далее'</b> чтобы закончить процесс установки.
-finish.title=Установка завершена!
-finish.text1=Fresh была установлена на ваше устройство.
-finish.text2=Вы можете автоматически перезагрузить свой девайс после настройки, поставив галочку снизу. <b>Добро пожаловать в Fresh!</b>
-finish.text3=Нажмите <b>'Выйти'</b>, чтобы завершить настройку.
-finish.button.restart=Перезагрузить после настройки
-wait.generic=Подождите...
-wait.install.scan=Сканирование устройства на наличие существующей установки Fresh.
-# // Fresh Addons {
-# Google
-addon.google=Приложения Google
-addon.google.title=Выберите свой уровень приложений Google
-addon.google.summary=Полезные сервисы, созданные с учётом ваших потребностей.
-addon.google.full.title=Полный
-addon.google.full.summary=Включает всё в Микро с добавлением Google Meet.
-addon.google.micro.title=Микро
-addon.google.micro.summary=Включает всё из Лайт с добавлением Карт и поддержки Android Auto.
-addon.google.lite.title=Лайт
-addon.google.lite.summary=Включает приложение Google и обязательные сервисы для Google Play.
-# Bixby
-addon.bixby=Bixby
-addon.bixby.title=Разблокируйте полный потенциал вашего устройства
-addon.bixby.summary=Испытайте жизнь умнее с Bixby.
-addon.bixby.voice.title=Bixby Voice
-addon.bixby.voice.summary=Bixby позволяет вам сфокусироватся на том, что важнее всего.
-addon.bixby.vision.title=Bixby Vision
-addon.bixby.vision.summary=Bixby Vision делает изучение мира вокруг вас легче.
-addon.bixby.reminders.title=Напоминания
-addon.bixby.reminders.summary=Bixby переводит напоминания на следующий уровень, давая вам возможность устанавливать их своим голосом.
-addon.bixby.routines.title=Рутины
-addon.bixby.routines.summary=Усиленные машинным обучением для адаптации под вашу жизнь, делающие ваше времяпровождение за телефоном более упорядоченным.
-# Seamless
-addon.seamless=Экосистема Galaxy
-addon.seamless.title=Безгранично подсоединяйтесь к своим девайсаи
-addon.seamless.summary=Испытайте экосистему Galaxy с этими приложениями и сервисами.
-addon.seamless.sharelive.title=Быстрый Обмен и Обмен Ссылками
-addon.seamless.sharelive.summary=Новый сервис для отправки фото, видео и файлов вашим друзьям и семье.
-addon.seamless.ltw.title=Связка с Windows
-addon.seamless.ltw.summary=Связка с Windows берёт всё, что возможно на Вашем устройстве, и переносит его на ваш ПК.
-addon.seamless.cta.title=Звоните и пишите на других девайсах
-addon.seamless.cta.summary=Звоните и отвечайте на звонки на вашем планшете Samsung.
-addon.seamless.wear.title=Galaxy Wearable
-addon.seamless.wear.summary=Перейдите на следующий уровень с носимыми гаджетами Galaxy.
-addon.seamless.friends.title=Друзья Galaxy
-addon.seamless.friends.summary=Аксессуарный сервис, дающий возможность наслаждаться разновидностью контента. 
-addon.seamless.onedrive.title=Microsoft OneDrive
-addon.seamless.onedrive.summary=Сохраняйте Ваши файлы и фотографии и имейте доступ к ним с любого девайса, везде.
-# AR Zone
-addon.ar_zone=Дополненная Реальность
-addon.ar_zone.title=Получайте больше удовольствия с Вашей камерой.
-addon.ar_zone.summary=Делайте забавные фотографии и снимайте видео с дополненной реальностью.
-addon.ar_zone.zone.title=AR Zone
-addon.ar_zone.zone.summary=Универсальный центр для функций дополненной реальности, таких как AR Emoji и AR Doodle.
-addon.ar_zone.emoji.title=AR Emoji
-addon.ar_zone.emoji.summary=Делайте забавные фото и снимайте видео с эмоджи с помощью разнообразных режимов фото.
-addon.ar_zone.doodle.title=AR Doodle
-addon.ar_zone.doodle.summary=Режим AR Doodle улучшает видео, позволяя Вам добавлять рисунки или рукопись в Ваше пространство.
-addon.ar_zone.decopic.title=DECO Pic
-addon.ar_zone.decopic.summary=Набор креативных инструментов для создания своих забавных и глупых картинок.
-# Game Services
-addon.game_services=Game Services
-addon.game_services.title=Игра началась!
-addon.game_services.summary=Прокачайте мобильный гейминг с Вашим Samsung Galaxy.
-addon.game_services.home.title=Game Launcher and Tools
-addon.game_services.home.summary=Универсальный центр для упраления Вашими любимыми играми.
-# Security
-addon.security=Безопасность
-addon.security.title=Улучшите Вашу безопасность
-addon.security.summary=Оставляйте Ваш девайс Samsung Galaxy защищённым всегда.
-addon.security.antimalware.title=Защита девайса
-addon.security.antimalware.summary=Защитите Ваш телефон Galaxy от вирусов.
-addon.security.folder.title=Защищённая папка
-addon.security.folder.summary=Используйте уровень защиты платформы Samsung Knox для создания приватного пространства.
-addon.security.share.title=Приватный обмен
-addon.security.share.summary=Функция обмена файлами с сохранением конфиденциальности, которая даёт возможность делится файлами без волнений.
-addon.security.checkout.title=Samsung Checkout
-addon.security.checkout.summary=Быстрые, безопасные и лёгкие покупки в Galaxy Store и Galaxy Themes.
-# Samsung DeX
-addon.dex=Samsung DeX
-addon.dex.title=Будьте многозадачными на разных девайсах
-addon.dex.summary=Подключите Ваш Galaxy к Вашему ТВ или ПК для открытия нового настольного мира.
-addon.dex.install.title=Samsung DeX
-addon.dex.install.summary=Рекомендуется использовать Samsung DeX на девайсах с оперативной памятью не ниже 6 ГБ.
-# More apps
-addon.sec=Больше приложений
-addon.sec.title=Получите максимум из Вашего девайса
-addon.sec.summary=Улучшите Ваш опыт с Galaxy.
-addon.sec.dict.title=Словарь Samsung
-addon.sec.dict.summary=Пополняйте Ваш словарный запас, когда встречайтесь с незнакомым словом!
-addon.sec.kids.title=Samsung Kids
-addon.sec.kids.summary=Создайте безопасную среду для Вашего ребёнка для его исследования и подключения к миру.
-addon.sec.stc.title=Smart Touch Call
-addon.sec.stc.summary=Smart Touch Call приносит вам будущее поддержки Samsung.
-addon.installed=Установлено
-addon.notinstalled=Не установлено
-# } // Fresh Addons
-# // Installation script strings {
-script.partitions.scanning=Сканирование разделов устройства
-script.partitions.fail1=Не удалось просканировать разделы.
-script.partitions.fail2=Обновите среду восстановления.
-script.partitions.mount=Монтирование разделов.
-script.partitions.remount=Перемонтирование разделов.
-script.partitions.umount=Размонтирование разделов.
-script.partitions.found.system=Найден раздел операционной системы
-script.partitions.found.vendor=Найден раздел vendor устройства
-script.partitions.found.product=Найден раздел product OEM
-script.partitions.found.splash=Найден раздел изображений загрузчика OEM
-script.partitions.found.boot=Найден раздел ядра Linux
-script.partitions.found.dtb=Найден раздел оверлея дерева устройства
-script.partitions.found.recovery=Найден раздел среды восстановления
-script.install.main=Установка Fresh 4
-script.install.super=Установка основного раздела.
-script.install.system=Установка раздела system.
-script.install.vendor=Установка раздела vendor.
-script.install.product=Установка раздела product.
-script.install.splash=Установка кастомного сплэша.
-script.install.boot.mint=Установка ядра Mint.
-script.install.boot.generic=Установка кастомного ядра.
-script.install.dtb=Установка кастомного оверлея дерева устройства.
-script.install.recovery.twrp=Установка среды TWRP.
-script.install.recovery.shrp=Установка среды SHRP.
-# What kind of custom?
-# Is it a recovery that is chosen by user?
-script.install.recovery.generic=Установка кастомной среды рекавери.
-script.install.complete=Fresh успешно установлена!
-script.housekeeping.addons=Установка выбранных дополнений.
-# } // Installation script strings
+#  
+#  Installer Language Resource File
+#  Based on AROMA Installer
+#  The Fresh Project
+#  Copyright (C) 2022 TenSeventy7
+#            (C) 2025 PeterKnecht93
+#  
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#  
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#  
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#  
+#  =========================
+
+#   Language Information
+#
+#   Language             : Russian
+#   Lang code (ISO-639)  : RU
+#   Localization By      : trigger337
+#
+
 # // Basic installer strings {
-text_ok=OK
+
 text_next=Далее
-install.next=Далее
-install.exit=Выйти
 text_back=Назад
+text_ok=Ок
 text_yes=Да
 text_no=Нет
-# About what?
-text_about=ЧаВО
-text_calibrating=Инструменты калибрации
-text_quit=Покинуть установку Fresh
-text_quit_msg=Вы уверены, что хотите выйти? Изменения не будут применены.
+text_about=Информация
+text_quit=Остановить установку Fresh
+text_quit_msg=Вы действительно хотите остановить установку? Изменения не будут применены.
+text_calibrating=Инструменты калибровки
+
+text.exit=Выйти
+wait.generic=Пожалуйста подождите...
+wait.install.scan=Сканирование устройства на наличие существующей установки Fresh.
+
+# } // Basic installer strings
+
+# // Main installer strings {
+
+# Language screen
+lang.title=Привет!
+lang.summary=Пожалуйста выберите предпочитаемый язык.
+lang.name=Русский
+lang.translator=Русификатор - trigger337
+
+# Welcome screen
+welcome.title=Добро пожаловать в Fresh!
+welcome.text1=Вы запустили мастер установки.
+welcome.text2=Сейчас установщик проведёт вас через настройку Fresh на вашем устройстве и добавление предпочитаемых функций.
+welcome.text3=Нажмите <b>'Далее'</b> чтобы продолжить.
+
+# ToS and privacy policy screen
+terms.title=Условия использования
+terms.summary=Использование Fresh определяется условиями <b>tenseventyseven</b>.
+terms.check=Я согласен
+terms.confirm=Вы обязаны согласиться с условиями чтобы продолжить.
+
+# Install menu screen
+menu.title=Добро пожаловать в установщик!
+menu.current.summary=Привет, старичок! Fresh уже установлена на вашем устройстве.
+menu.new.summary=Привет, новичок!
+menu.upgrade.title=Обновить Fresh
+menu.upgrade.summary=Обновить ваше устройство до этой версии Fresh.
+menu.reinstall.title=Переустановить Fresh 6
+menu.reinstall.summary=Переустановить Fresh с опциями, выбранными при предыдущей установке.
+menu.express.title=Простая установка
+menu.express.summary=Установить Fresh используя стандартные настройки приложений и сервисов.
+menu.custom.title=Пользовательская установка
+menu.custom.summary=Установить Fresh с вашими настройками приложений и сервисов.
+
+# Confirmation and summary screen
+confirm.title=Так держать!
+confirm.summary=Проверьте свой выбор и нажмите <b>'Установить сейчас'</b> чтобы начать установку.
+confirm.next=Установить сейчас
+
+# Installation screen
+install.title=Установка Fresh 6
+install.summary=Fresh устанавливается на ваше устройство. Время чая, это займёт некоторое время.
+install.finish=Fresh успешно установлена. Нажмите <b>'Далее'</b> чтобы завершить процесс установки.
+
+# Finish screen
+finish.title=Установка завершена!
+finish.text1=Fresh была успешно установлена на ваше устройство.
+finish.text2=Поставьте галочку ниже, чтобы автоматически перезагрузить ваше устройство после этой установки. <b>Добро пожаловать в Fresh!</b>
+finish.text3=Нажмите <b>'Выйти'</b> чтобы завершить установку.
+finish.button.restart=Перезагрузить после установки
+
+# } // Main installer strings
+
+# // Fresh addon strings {
+
+addon.installed=Да
+addon.notinstalled=Нет
+
+# Google
+addon.google=Приложения Google
+addon.google.title=Выберите набор приложений Google
+addon.google.summary=Полезные сервисы, созданные для вас.
+addon.google.full.title=Full
+addon.google.full.summary=Включает в себя всё из Micro, "Обвести и найти" и Google Meet.
+addon.google.micro.title=Micro
+addon.google.micro.summary=Включает в себя всё из Lite, Chrome и поддержку Android Auto.
+addon.google.lite.title=Lite
+addon.google.lite.summary=Включает в себя только сервисы, необходимые для работы Google Play.
+
+# Bixby
+addon.bixby=Bixby
+addon.bixby.title=Дополнительные возможности с Bixby
+addon.bixby.summary=Сконцентрируйтесь на том, что действительно важно.
+addon.bixby.voice.title=Bixby Voice
+addon.bixby.voice.summary=Bixby освобождает вас для дел, которые действительно имеют значение.
+addon.bixby.vision.title=Bixby Vision
+addon.bixby.vision.summary=Bixby Vision помогает изучать мир вокруг вас.
+
+# Galaxy Ecosystem
+addon.seamless=Экосистема Galaxy
+addon.seamless.title=Соединяйте свои устройства незаметно
+addon.seamless.summary=Пользуйтесь экосистемой Galaxy с этими приложениями и сервисами.
+addon.seamless.ltw.title=Связь с Windows
+addon.seamless.ltw.summary=Связь с Windows берёт всё, что вы можете делать на вашем смартфоне и переносит это на ваш компьютер.
+addon.seamless.camerashare.title=Поделиться камерой
+addon.seamless.camerashare.summary=Используйте ваш Galaxy как вебкамеру.
+addon.seamless.cta.title=Звоните и переписывайтесь на других устройствах
+addon.seamless.cta.summary=Совершайте и принимайте звонки на вашем планшете Samsung.
+
+# Security
+addon.security=Защита
+addon.security.title=Усильте свою безопасность
+addon.security.summary=Держите ваш Galaxy всегда под защитой.
+addon.security.checkout.title=Samsung Checkout
+addon.security.checkout.summary=Быстрая, безопасная и простая оплата в Galaxy Store и Galaxy Themes.
+addon.security.folder.title=Secure Folder
+addon.security.folder.summary=Используйте непробиваемую платформу Samsung Knox, чтобы создать защищённое приватное пространство.
+addon.security.wifi.title=Безопасный Wi-Fi
+addon.security.wifi.summary=Защитите ваш Galaxy от хакерских атак.
+addon.security.autoblocker.title=Автоматическая блокировка
+addon.security.autoblocker.summary=Защитите свой телефон, автоматически блокируя угрозы и подозрительные действия.
+
+# Augmented Reality
+addon.ar_zone=Дополненная реальность
+addon.ar_zone.title=Веселитесь больше со своей камерой
+addon.ar_zone.summary=Снимайте фото и видео с дополненной реальностью.
+addon.ar_zone.emoji.title=AR Emoji
+addon.ar_zone.emoji.summary=Снимайте фото и видео с эмодзи в различных режимах.
+addon.ar_zone.doodle.title=AR Doodle
+addon.ar_zone.doodle.summary=Режим AR Doodle позволяет рисовать линии или писать в пространстве.
+addon.ar_zone.decopic.title=DECO Pic
+addon.ar_zone.decopic.summary=Набор креативных инструментов для создания смешных и глупых картинок.
+
+# Galaxy AI
+addon.gai=Galaxy AI
+addon.gai.title=Откройте жизнь с ИИ
+addon.gai.summary=Раскройте творчество, улучшите продуктивность и откройте мир новых возможностей.
+addon.gai.wallpaper.title=Генеративные обои
+addon.gai.wallpaper.summary=Генерируйте персонализированные обои для домашнего экрана и экрана блокировки.
+addon.gai.livetranslate.title=Live Translate
+addon.gai.livetranslate.summary=Телефонные разговоры будут переводиться в реальном времени.
+addon.gai.interpreter.title=Bixby Interpreter
+addon.gai.interpreter.summary=Чат-бот Interpreter будет общаться с вами вместо друзей.
+
+# More Apps
+addon.misc=Больше приложений
+addon.misc.title=Выжмите всё из вашего устройства
+addon.misc.summary=Максимизируйте ваш опыт с Galaxy.
+addon.misc.dex.title=Samsung DeX
+addon.misc.dex.summary=Подключите ваш Galaxy к телевизору или компьютеру чтобы запустить настольный режим.
+addon.misc.find.title=Поиск устройства
+addon.misc.find.summary=Находите ваши устройства Galaxy: телефоны, планшеты, часы и другое без звонков от мамы.
+addon.misc.suggestions.title=Умные рекомендации
+addon.misc.suggestions.summary=Получайте персонализированные рекомендации для сообщений, событий в календаре и других сервисов для упрощения вашего дня.
+addon.misc.game.title=Игровые инструменты
+addon.misc.game.summary=Это не повысит ваш скилл, но играйте с комфортом используя игровые инструменты и сервис оптимизации игр.
+
+# } // Fresh addon strings
+
+# // Installation strings {
+
+script.check.compatibility=Проверка совместимости устройства
+script.check.device.fail1=Распознана несовместимая модель!
+script.check.device.fail2=Эта сборка Fresh предназначена только для:
+script.check.device.success=распознана.
+script.check.partitions.fail1=Разделы не найдены!
+script.check.partitions.fail2=Пожалуйста, обновите recovery.
+script.check.partitions.success=Разделы найдены.
+
+script.partitions.mount=Монтирование разделов.
+script.partitions.remount=Перемонтирование разделов.
+script.partitions.unmount=Размонтирование разделов.
+
+script.install.main=Установка Fresh 6
+script.install.super=Инициализация раздела super.
+script.install.system=Установка раздела system Fresh.
+script.install.vendor=Установка раздела vendor Fresh.
+script.install.product=Установка раздела product Fresh.
+script.install.odm=Установка раздела odm Fresh.
+script.install.prism=Установка раздела prism Fresh.
+script.install.optics=Установка раздела optics Fresh.
+script.install.boot=Установка кастомного ядра.
+script.install.recovery=Установка кастомного recovery.
+script.install.splash=Установка кастомного экрана загрузки OEM.
+script.install.dtb=Установка blob дерева устройства.
+script.install.dtbo=Установка overlay дерева устройства.
+script.install.init_boot=Установка раздела init_boot.
+script.install.vendor_boot=Установка раздела vendor_boot.
+script.install.system_dlkm=Установка раздела system_dlkm.
+script.install.vendor_dlkm=Установка раздела vendor_dlkm.
+script.install.complete=Fresh успешно установлена!
+
+script.housekeeping.addons=Установка дополнений, выбранных при настройке.
+
+# } // Installation strings
