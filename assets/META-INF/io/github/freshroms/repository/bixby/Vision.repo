@@ -1,0 +1,5 @@
+# Bixby Vision
+system/app/VisionIntelligence3.7
+system/etc/permissions/privapp-permissions-com.samsung.android.bixbyvision.framework.xml
+system/etc/permissions/privapp-permissions-com.samsung.android.visionintelligence_v3.7.xml
+system/priv-app/BixbyVisionFramework3.5

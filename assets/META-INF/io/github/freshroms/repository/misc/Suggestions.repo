@@ -1,0 +1,4 @@
+# Smart Suggestions
+system/etc/permissions/privapp-permissions-com.samsung.android.smartsuggestions.xml
+system/etc/sysconfig/samsungsmartsuggestions.xml
+system/priv-app/SamsungSmartSuggestions

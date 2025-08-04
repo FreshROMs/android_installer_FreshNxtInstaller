@@ -1,92 +1,108 @@
 #!/sbin/sh
 # =========================================
-#         _____              _      
-#        |  ___| __ ___  ___| |__   
-#        | |_ | '__/ _ \/ __| '_ \  
-#        |  _|| | |  __/\__ \ | | | 
-#        |_|  |_|  \___||___/_| |_| 
-#                              
+#         _____              _
+#        |  ___| __ ___  ___| |__
+#        | |_ | '__/ _ \/ __| '_ \
+#        |  _|| | |  __/\__ \ | | |
+#        |_|  |_|  \___||___/_| |_|
+#
 # =========================================
-# (C) 2022 John Vincent - TenSeventy7@XDA
+#
+#  The Fresh Project
+#  Copyright (C) 2022 John Vincent - TenSeventy7@XDA
+#            (C) 2025 Louis Poier - PeterKnecht93@XDA
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+#  =========================
+#
+# shellcheck disable=SC3010,SC3014,SC3037,SC3043
+#
 
+# [
 INSTALLER="/tmp/install-wizard"
-SUMMARY="/tmp/summary.txt"
-LANGPROP="${INSTALLER}/lang.prop"
+LANG_PROP="/tmp/fresh/lang.prop"
+SUMMARY="$INSTALLER/summary.txt"
 
 file_getprop() { grep "^$2=" "$1" | cut -d= -f2-; }
 
 title() {
-	LOCAL_NAME=$(file_getprop "${LANGPROP}" "addon.${1}")
-	echo " " >> ${SUMMARY}
-	echo " " >> ${SUMMARY}
-	echo "<b>${LOCAL_NAME}</b>" >> ${SUMMARY}
+	local title
+	title="$(file_getprop "${LANG_PROP}" "addon.${1}")"
+
+	echo -e "\n"         >> "$SUMMARY"
+	echo "<b>$title</b>" >> "$SUMMARY"
 }
 
 app() {
-	PROP="${INSTALLER}/${1}.prop"
-	APP="${2}.${3}"
-	ITEM="item.0.${4}"
-	LOCAL_NAME=$(file_getprop "${LANGPROP}" "addon.${APP}.title")
+	local addon_prop app_name item
+	addon_prop="$INSTALLER/${1}.prop"
+	app_name="$(file_getprop "$LANG_PROP" "addon.${1}.${2}.title")"
+	item="item.0.${3}"
 
-	echo -n "   " >> ${SUMMARY}
-	echo -n "<#selectbg_g>${LOCAL_NAME}:</#>" >> ${SUMMARY}
-	echo -n " " >> ${SUMMARY}
+	echo -n "   <#selectbg_g>$app_name:</#> " >> ${SUMMARY}
 
-	if [ $(file_getprop "${PROP}" "${ITEM}") == '1' ]; then
-		echo $(file_getprop "${LANGPROP}" "addon.installed") >> ${SUMMARY}
-	else
-		echo $(file_getprop "${LANGPROP}" "addon.notinstalled") >> ${SUMMARY}
+	if [[ $(file_getprop "$addon_prop" "$item") == '1' ]]
+		then file_getprop "$LANG_PROP" "addon.installed" >> ${SUMMARY}
+		else file_getprop "$LANG_PROP" "addon.notinstalled" >> ${SUMMARY}
 	fi
 }
+# ]
 
-echo " " > ${SUMMARY}
+echo " " > "$SUMMARY"
 
 # Google
-echo -n "   <#selectbg_g><b>$(file_getprop "${LANGPROP}" "addon.google"):</b></#> " >> ${SUMMARY}
-
-if [ $(file_getprop "${INSTALLER}/google.prop" "selected.0") == '1' ]; then
-		echo $(file_getprop "${LANGPROP}" "addon.google.full.title") >> ${SUMMARY}
-elif [ $(file_getprop "${INSTALLER}/google.prop" "selected.0") == '2' ]; then
-		echo $(file_getprop "${LANGPROP}" "addon.google.micro.title") >> ${SUMMARY}
-elif [ $(file_getprop "${INSTALLER}/google.prop" "selected.0") == '3' ]; then
-		echo $(file_getprop "${LANGPROP}" "addon.google.lite.title") >> ${SUMMARY}
-else 
-		echo $(file_getprop "${LANGPROP}" "addon.google.none.title") >> ${SUMMARY}
-fi
+echo -n "   <#selectbg_g><b>$(file_getprop "$LANG_PROP" "addon.google"):</b></#> " >> ${SUMMARY}
+case $(file_getprop "$INSTALLER/google.prop" "selected.0") in
+1) file_getprop "$LANG_PROP" "addon.google.full.title" >> "$SUMMARY" ;;
+2) file_getprop "$LANG_PROP" "addon.google.micro.title" >> "$SUMMARY" ;;
+3) file_getprop "$LANG_PROP" "addon.google.lite.title" >> "$SUMMARY" ;;
+esac
 
 # Bixby
 title bixby
-app bixby bixby voice 1
-app bixby bixby vision 2
-app bixby bixby reminders 3
-app bixby bixby routines 4
+app bixby voice 1
+app bixby vision 2
 
 # Galaxy Ecosystem
 title seamless
-app seamless seamless sharelive 1
-app seamless seamless ltw 2
-app seamless seamless cta 3
-app seamless seamless friends 4
-
-# Augmented Reality
-title ar_zone
-app ar-zone ar_zone zone 1
-app ar-zone ar_zone emoji 2
-app ar-zone ar_zone doodle 3
-app ar-zone ar_zone decopic 4
-
-# Game Services
-title game_services
-app game-home game_services home 1
+app seamless ltw 1
+app seamless camerashare 2
+app seamless cta 3
 
 # Security
 title security
-app security security antimalware 1
-app security security folder 2
-app security security share 3
-app security security checkout 4
+app security checkout 1
+app security folder 2
+app security wifi 3
+app security autoblocker 4
+
+# Augmented Reality
+title ar_zone
+app ar_zone emoji 1
+app ar_zone doodle 2
+app ar_zone decopic 3
+
+# Galaxy AI
+title gai
+app gai wallpaper 1
+app gai livetranslate 2
+app gai interpreter 3
 
 # More Apps
-title sec
-app extras sec dict 1
-app extras sec stc 2
+title misc
+app misc dex 1
+app misc find 2
+app misc suggestions 3
+app misc game 4

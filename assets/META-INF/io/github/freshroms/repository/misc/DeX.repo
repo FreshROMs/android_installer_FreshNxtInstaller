@@ -1,0 +1,9 @@
+# Samsung DeX
+system/etc/permissions/privapp-permissions-com.sec.android.app.desktoplauncher.xml
+system/etc/permissions/privapp-permissions-com.sec.android.desktopmode.uiservice.xml
+system/etc/permissions/DesktopSystemUIKnoxLib_permissions.xml
+system/etc/permissions/DesktopSystemUICoreLib_permissions.xml
+system/priv-app/KnoxDesktopLauncher
+system/priv-app/DesktopModeUiService
+system/priv-app/DesktopSystemUI
+system/priv-app/DeXonPC

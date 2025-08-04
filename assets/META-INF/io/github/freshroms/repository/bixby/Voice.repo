@@ -1,0 +1,8 @@
+# Bixby Voice
+system/app/BixbyWakeup
+system/etc/permissions/privapp-permissions-com.samsung.android.app.settings.bixby.xml
+system/etc/permissions/privapp-permissions-com.samsung.android.bixby.agent.xml
+system/etc/permissions/privapp-permissions-com.samsung.android.bixby.wakeup.xml
+system/etc/sysconfig/bixbyagent.xml
+system/priv-app/Bixby
+system/priv-app/SettingsBixby

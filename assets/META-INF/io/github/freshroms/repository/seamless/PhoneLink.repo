@@ -1,0 +1,4 @@
+# Link to Windows
+system/etc/permissions/privapp-permissions-com.microsoft.appmanager.xml
+system/etc/permissions/privapp-permissions-com.samsung.android.mdx.xml
+system/priv-app/LinkToWindowsService

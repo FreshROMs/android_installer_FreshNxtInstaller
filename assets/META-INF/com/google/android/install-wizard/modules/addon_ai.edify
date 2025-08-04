@@ -1,0 +1,11 @@
+# Galaxy AI
+checkbox(
+  "<~addon.gai.title>",
+  "<~addon.gai.summary>",
+  "@gai",
+  "gai.prop",
+
+  "<~addon.gai.wallpaper.title>",       "<~addon.gai.wallpaper.summary>",       1,
+  "<~addon.gai.livetranslate.title>",   "<~addon.gai.livetranslate.summary>",   1,
+  "<~addon.gai.interpreter.title>",     "<~addon.gai.interpreter.summary>",     1
+);

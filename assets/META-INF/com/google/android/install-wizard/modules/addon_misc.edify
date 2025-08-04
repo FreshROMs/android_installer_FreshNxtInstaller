@@ -1,0 +1,12 @@
+# More Apps
+checkbox(
+  "<~addon.misc.title>",
+  "<~addon.misc.summary>",
+  "@misc",
+  "misc.prop",
+
+  "<~addon.misc.dex.title>",           "<~addon.misc.dex.summary>",           1,
+  "<~addon.misc.find.title>",          "<~addon.misc.find.summary>",          1,
+  "<~addon.misc.suggestions.title>",   "<~addon.misc.suggestions.summary>",   1,
+  "<~addon.misc.game.title>",          "<~addon.misc.game.summary>",          0
+);

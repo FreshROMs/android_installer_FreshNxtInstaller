@@ -1,0 +1,4 @@
+# Camera Sharing
+system/etc/permissions/privapp-permissions-com.samsung.android.hwresourceshare.xml
+system/etc/sysconfig/preinstalled-packages-com.samsung.android.hwresourceshare.xml
+system/priv-app/HWResourceShare

@@ -1,12 +1,12 @@
-﻿# Security
+# Security
 checkbox(
   "<~addon.security.title>",
   "<~addon.security.summary>",
   "@security",
   "security.prop",
 
-  "<~addon.security.antimalware.title>",    "<~addon.security.antimalware.summary>",        1,
-  "<~addon.security.folder.title>",         "<~addon.security.folder.summary>",             1,
-  "<~addon.security.share.title>",          "<~addon.security.share.summary>",              1,
-  "<~addon.security.checkout.title>",       "<~addon.security.checkout.summary>",           0
+  "<~addon.security.checkout.title>",      "<~addon.security.checkout.summary>",      1,
+  "<~addon.security.folder.title>",        "<~addon.security.folder.summary>",        1,
+  "<~addon.security.wifi.title>",          "<~addon.security.wifi.summary>",          0,
+  "<~addon.security.autoblocker.title>",   "<~addon.security.autoblocker.summary>",   0
 );
