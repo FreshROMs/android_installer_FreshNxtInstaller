@@ -74,10 +74,10 @@ extern "C" {
 //
 // AROMA Main Configurations
 //
-#define AROMA_BUILD_A     "<kamusta@tenseventyseven.cf>"
-#define AROMA_BUILD_URL   "https://fresh.tenseventyseven.cf/"
-#define AROMA_COPY        "(C) 2022 TenSeventy7 for the Fresh Project\n(C) 2013-2017 amarullz xda-developers"
-#define AROMA_COPY_NS1    "(C) 2022 TenSeventy7 for the Fresh Project and"
+#define AROMA_BUILD_A     "<kamusta@tenseventyseven.xyz>"
+#define AROMA_BUILD_URL   "https://fresh.tenseventyseven.xyz/"
+#define AROMA_COPY        "(C) 2022-2025 The Fresh Project\n(C) 2013-2017 amarullz xda-developers"
+#define AROMA_COPY_NS1    "(C) 2022-2025 The Fresh Project and"
 #define AROMA_COPY_NS2    "(C) 2013-2017 amarullz xda-developers"
 
 //-- Temporary Dir - Move from /tmp/aroma-data to /tmp/aroma symlink to /tmp/aroma-data for backward compatibility
