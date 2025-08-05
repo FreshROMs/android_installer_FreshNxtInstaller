@@ -2,9 +2,9 @@
 ## Version info
 ##
 AROMA_NAME    := Fresh Install Wizard
-AROMA_VERSION := 13.2.1.1
+AROMA_VERSION := 14.0.0.0
 AROMA_BUILD   := $(shell date +%s)
-AROMA_CN      := Red-Eyes Black Dragon
+AROMA_CN      := Cosmic
 
 ##
 ## Compiler options
