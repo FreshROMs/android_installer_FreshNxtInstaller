@@ -20,7 +20,7 @@ img.radio.on.push=radio_on_press
 img.radio.on.focus=radio_on_focus
 
 img.progress=button
-img.prograss.fill=progress_full.9
+img.progress.fill=progress_full.9
 
 color.winbg           = #171717
 color.winbg_g         = #171717

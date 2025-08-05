@@ -17,7 +17,7 @@
 /*
  * Descriptions:
  * -------------
- * Source code for parsing and processing edify script (aroma-config)
+ * Source code for parsing and processing edify script (install-wizard-config)
  *
  */
 
@@ -3768,7 +3768,7 @@ byte aui_start() {
         (script_data[1] == 0xBB) &&
         (script_data[2] == 0xBF)) {
       script_data += 3;
-      LOGS("aroma-config was UTF-8\n");
+      LOGS("install-wizard-config was UTF-8\n");
     }
   }
   
@@ -3793,7 +3793,7 @@ byte aui_start() {
   if (error != 0 || error_count > 0) {
     vibrate(50);
     fprintf(apipe(), "ui_print\n");
-    fprintf(apipe(), "ui_print SYNTAX ERROR!!! aroma-config on line %d col %d\n", yyErrLine(), yyErrCol());
+    fprintf(apipe(), "ui_print SYNTAX ERROR!!! install-wizard-config on line %d col %d\n", yyErrLine(), yyErrCol());
     fprintf(apipe(), "ui_print\n");
     usleep(200000);
     vibrate(50);
@@ -3848,7 +3848,7 @@ byte aui_start() {
     }
     else {
       vibrate(50);
-      fprintf(apipe(), "ui_print ERROR!!! aroma-config: %s\nui_print\n", state.errmsg);
+      fprintf(apipe(), "ui_print ERROR!!! install-wizard-config: %s\nui_print\n", state.errmsg);
       usleep(200000);
       vibrate(50);
     }

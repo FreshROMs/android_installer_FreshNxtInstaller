@@ -142,7 +142,7 @@ void ai_dump_logs() {
   char dumpname[256];
   char msgtext[256];
   snprintf(dumpname, 255, "%s.log.txt", getArgv(1));
-  snprintf(msgtext, 255, "Install Log will be saved into:\n\n<#060>%s</#>\n\nAre you sure you want to save it?", dumpname);
+  snprintf(msgtext, 255, "Installation log will be saved to:\n\n<#060>%s</#>\n\nAre you sure you want to save it?", dumpname);
   byte res = aw_confirm(
                ai_win,
                "Save Install Log",
@@ -159,7 +159,7 @@ void ai_dump_logs() {
       aw_alert(
         ai_win,
         "Save Install Log",
-        "Install Logs has been saved...",
+        "Installation logs have been saved.",
         "@info",
         NULL
       );
@@ -171,11 +171,11 @@ void ai_dump_logs() {
         "Error read & write log"
       };
       char errInfo[128];
-      snprintf(errInfo, 128, "Cannot save the install logs:\n  %s", errstr[cpres - 2]);
+      snprintf(errInfo, 128, "Failed to save installation logs:\n  %s", errstr[cpres - 2]);
       aw_alert(
         ai_win,
         "Save Install Log Error",
-        "Install Logs has been saved...",
+        "Installation logs could not be saved!",
         "@alert",
         NULL
       );
@@ -452,7 +452,7 @@ static void * ac_progressthread(void * cookie) {
     ag_draw_ex(ai_cv, ai_bg, 0, ptxt_y, 0, ptxt_y, agw(), agh() - ptxt_y);
     int curr_prog_w = round(ai_prog_ow * ai_progress_pos);
     
-    if (!atheme_draw("img.prograss.fill", ai_cv, ai_prog_ox, ai_prog_oy, curr_prog_w, ai_prog_oh)) {
+    if (!atheme_draw("img.progress.fill", ai_cv, ai_prog_ox, ai_prog_oy, curr_prog_w, ai_prog_oh)) {
       ag_roundgrad(ai_cv, ai_prog_x, ai_prog_y, ai_progress_w, ai_prog_h, acfg()->selectbg, acfg()->selectbg_g, ai_prog_r);
       ag_roundgrad_ex(ai_cv, ai_prog_x, ai_prog_y, ai_progress_w, ceil((ai_prog_h) / 2.0), LOWORD(hl1), HIWORD(hl1), ai_prog_r, 2, 2, 0, 0);
       

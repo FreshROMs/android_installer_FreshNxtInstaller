@@ -109,7 +109,7 @@ static char theme_name[AROMA_THEME_CNT][27] = {
   "img.dialog",
   "img.dialog.titlebar",
   "img.progress",
-  "img.prograss.fill",
+  "img.progress.fill",
   "img.selection",
   "img.selection.push",
   "img.button",
@@ -1705,7 +1705,7 @@ byte aw_calibmatrix(AW_CALIBPOINTP displayPtr, AW_CALIBPOINTP screenPtr, AW_CALI
 
 byte aw_calibtools(AWINDOWP parent) {
   aw_alert(parent,
-           "No Need Calibration",
+           "Calibration is not necessary",
            "This version doesn't need any calibration data...",
            NULL,
            NULL);
