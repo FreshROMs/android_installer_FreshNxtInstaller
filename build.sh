@@ -1,34 +1,32 @@
 #!/usr/bin/env bash
 # =========================================
-#         _____              _      
-#        |  ___| __ ___  ___| |__   
-#        | |_ | '__/ _ \/ __| '_ \  
-#        |  _|| | |  __/\__ \ | | | 
-#        |_|  |_|  \___||___/_| |_| 
-#                              
+#         _____              _
+#        |  ___| __ ___  ___| |__
+#        | |_ | '__/ _ \/ __| '_ \
+#        |  _|| | |  __/\__ \ | | |
+#        |_|  |_|  \___||___/_| |_|
+#
 # =========================================
-#  
+#
 #  The Fresh Project
-#  Copyright (C) 2019-2022 TenSeventy7
-#                2024 PeterKnecht93
-#  
+#  Copyright (C) 2019-2022 John Vincent
+#            (C) 2024-2025 Louis Poier
+#
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
 #  the Free Software Foundation, either version 3 of the License, or
 #  (at your option) any later version.
-#  
+#
 #  This program is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #  GNU General Public License for more details.
-#  
+#
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
-#  
+#
 #  =========================
 #
-
-set -e
 
 # [
 TOP="$PWD"
@@ -67,7 +65,7 @@ else
 		wget -O "$TOP/ndk.zip" \
 			https://dl.google.com/android/repository/android-ndk-r27c-linux.zip &>/dev/null
 
-		unzip -q "$TOP/ndk.zip"
+		unzip -q "$TOP/ndk.zip" || exit 1
 		mv 'android-ndk-r27c' "$NDK_EXT"
 		rm -f "$TOP/ndk.zip"
 	fi
@@ -85,36 +83,36 @@ script_echo " "
 script_echo "I: Applying patches..."
 for target in "$TOP/patches/"*; do
     TARGET=$(basename "$target")
-	TARGET_DIR="${TARGET_DIRS[$TARGET]}"
+    TARGET_DIR="${TARGET_DIRS[$TARGET]}"
 
-	# Check if target is valid
+    #-- Check if target is valid
     if [ -z "$TARGET_DIR" ]; then
         script_echo "E: Invalid patch target: '$TARGET'!"
         script_echo "   Aborting... \n"
         exit 1
     fi
 
-    cd "${TARGET_DIRS[$TARGET]}"
+    cd "${TARGET_DIRS[$TARGET]}" || exit 1
     for PATCH_FILE in "$target/"*.patch; do
-		PATCH_SUBJECT=$(sed -n 's/^Subject: \[PATCH\] //p' "$PATCH_FILE" 2>/dev/null)
-		[ ! -f "$PATCH_FILE" ] && continue
+        PATCH_SUBJECT=$(sed -n 's/^Subject: \[PATCH\] //p' "$PATCH_FILE" 2>/dev/null)
+        [ ! -f "$PATCH_FILE" ] && continue
 
-		# Check if patch is already applied
+        #-- Check if patch is already applied
         if patch -p1 -R -N -t --dry-run < "$PATCH_FILE" >/dev/null; then
             script_echo "  - Already applied '$PATCH_SUBJECT'."
             continue
         fi
 
-        # Check if patch can be applied
+        #-- Check if patch can be applied
         if ! patch -p1 -N -t --dry-run < "$PATCH_FILE" >/dev/null; then
-			script_echo " "
+            script_echo " "
             script_echo "E: Failed to apply '$PATCH_SUBJECT'! \n"
             exit 1
         fi
 
-        # Apply the patch
+        #-- Apply the patch
         script_echo "  - Applying '$PATCH_SUBJECT'."
-        patch -p1 -N -t --no-backup-if-mismatch < "$PATCH_FILE" >/dev/null
+        patch -p1 -N -t --no-backup-if-mismatch < "$PATCH_FILE" >/dev/null || exit 1
 	done
 done
 script_echo " "
@@ -123,8 +121,8 @@ script_echo " "
 ## Compile FreshNxtInstaller
 ##
 script_echo "I: Compiling FreshNxtInstaler..."
-cd "$TOP"
+cd "$TOP" || exit 1
 make clean
-make --quiet --jobs "$(nproc)"
+make --quiet --jobs "$(nproc)" || exit 1
 
 exit 0
